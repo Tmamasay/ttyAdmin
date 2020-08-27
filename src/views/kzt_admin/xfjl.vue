@@ -1,7 +1,7 @@
 <template>
   <div class="xfjl_box shaowAll">
     <div class="toolS">
-      <p class="Ptitle">消费记录</p>
+      <p class="Ptitle">会员列表</p>
       <el-form :inline="true" class="demo-form-inline">
         <el-form-item label="">
           <el-date-picker
@@ -77,7 +77,7 @@
 </template>
 
 <script>
-import { getPage, getUsable } from '@/api/framework'
+import { getUsersPage, getUsable } from '@/api/chengxu'
 import { getcustomerId } from '@/utils/auth'
 export default {
   data() {
@@ -114,15 +114,16 @@ export default {
       _this.loading = true
       var data = {
         param: {
-          customerId: getcustomerId(),
-          current: _this.Current,
-          size: _this.Size,
-          startTime: _this.time ? Date.parse(_this.formatDate(_this.time[0])) : '',
-          endTime: _this.time ? Date.parse(_this.formatDate(_this.time[0])) : '',
-          type: _this.type
+          name: '',
+          companyName: '',
+          phone: '',
+          pageNum: _this.Current,
+          pageSize: _this.Size
+          // startTime: _this.time ? Date.parse(_this.time[0]) : '',
+          // endTime: _this.time ? Date.parse(_this.formatDate(_this.time[0])) : '',
         }
       }
-      getPage(data).then(res => {
+      getUsersPage(data).then(res => {
         console.log(res)
         if (res.statusCode === '00000') {
           setTimeout(res => {

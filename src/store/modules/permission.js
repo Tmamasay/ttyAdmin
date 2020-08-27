@@ -39,6 +39,7 @@ export function filterAsyncRoutes(routes, roles) {
 // 定义子路由跳转页面
 export const componentsMap = {
   roleManager: () => import('@/views/power/index'), // 角色管理
+  userManager: () => import('@/views/kzt_admin/xfjl'), // 控制台-订单记录
 
   homePage: () => import('@/views/dashboard/busIndex'), // 控制台-首页
   managerHomePage: () => import('@/views/dashboard/index'), // 控制台-首页

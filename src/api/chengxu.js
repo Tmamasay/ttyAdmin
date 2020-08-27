@@ -40,6 +40,15 @@ export function delRole(data) {
     data
   })
 }
+// 会员管理列表
+export function getUsersPage(data) {
+  return request({
+    url: '/th-manager-biz/userManager/getUsersPage',
+    method: 'post',
+    data
+  })
+}
+
 // 话单总览
 export function selectAllCallLogPage(data) {
   return request({
