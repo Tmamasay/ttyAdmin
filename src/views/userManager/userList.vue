@@ -32,33 +32,24 @@
       style="width:95%;margin:10px auto 20px auto;"
       highlight-current-row
     >
-      <el-table-column prop="gid" label="流水ID" />
-      <el-table-column prop="productCode" label="产品类型">
+      <el-table-column prop="name" label="姓名" />
+      <el-table-column prop="companyName" label="公司名称" />
+      <el-table-column prop="position" label="职位" />
+      <el-table-column prop="gid" label="会员注册日期" />
+      <el-table-column prop="username" label="手机号" />
+      <el-table-column prop="capacity" label="服务器预计容量" />
+      <el-table-column prop="gid" label="已使用容量" />
+      <el-table-column prop="companyStatus" label="状态">
         <template slot-scope="scope">
-          {{ scope.row.productCode.msg }}
+          {{ +scope.row.companyStatus===0?'未认证':+scope.row.companyStatus===1?'待审核':+scope.row.companyStatus===2?'已认证':'已驳回' }}
         </template>
       </el-table-column>
-      <el-table-column prop="busAmount" label="消费金额(元)">
+      <el-table-column
+        label="编辑"
+      >
         <template slot-scope="scope">
-          {{ toNum(scope.row.busAmount/100) }}
-        </template>
-      </el-table-column>
-      <el-table-column prop="balance" label="账户余额(元)">
-        <template slot-scope="scope">
-          {{ toNum(scope.row.balance/100) }}
-        </template>
-      </el-table-column>
-      <el-table-column prop="createTime" label="创建时间">
-        <template slot-scope="scope">
-          {{ formatDate(scope.row.createTime) }}
-        </template>
-      </el-table-column>
-      <el-table-column prop="remarks" label="交易备注" />
-      <el-table-column prop="status" label="交易状态" />
-      <el-table-column prop="type" label="交易类型">
-        <template slot-scope="scope">
-          <!-- {{ scope.row.type==='recharge'?'充值':scope.row.type==='consume'?'消费': '转移' }} -->
-          {{ scope.row.type.msg }}
+          <span v-if="scope.row.companyStatus!==1" style="color:#00c48f;cursor: pointer;" @click="goDetail(scope.row.companyStatus,scope.row.customerId)">查看</span>
+          <span v-else style="color:red;cursor: pointer;" @click="goDetail(scope.row.companyStatus,scope.row.customerId)">去审核</span>
         </template>
       </el-table-column>
     </el-table>
@@ -97,6 +88,9 @@ export default {
     this.getNum()
   },
   methods: {
+    goDetail(e, v) {
+      this.$router.push({ path: '/detial', query: { companyStatus: e, customerId: v }})
+    },
     async getNum() {
       await getUsable({
         param: {
@@ -118,9 +112,9 @@ export default {
           companyName: '',
           phone: '',
           pageNum: _this.Current,
-          pageSize: _this.Size
-          // startTime: _this.time ? Date.parse(_this.time[0]) : '',
-          // endTime: _this.time ? Date.parse(_this.formatDate(_this.time[0])) : '',
+          pageSize: _this.Size,
+          startTime: _this.time ? new Date(_this.time[0]).getTime() : '',
+          endTime: _this.time ? new Date(_this.time[1]).getTime() + 86399999 : ''
         }
       }
       getUsersPage(data).then(res => {
@@ -130,6 +124,7 @@ export default {
             _this.loading = false
           }, 300)
           _this.datalist = res.data.records
+          _this.total = res.data.total
         }
       })
     },

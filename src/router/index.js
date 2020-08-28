@@ -41,10 +41,22 @@ export const constantRoutes = [
     ]
   },
   {
+    path: '',
+    component: Layout,
+    hidden: true,
+    children: [
+      {
+        path: 'detial',
+        component: () => import('@/views/userManager/detail')
+      }
+    ]
+  },
+  {
     path: '/login',
     component: () => import('@/views/login/index'),
     hidden: true
   },
+
   {
     path: '/loginForward',
     component: () => import('@/views/loginFor/index'),

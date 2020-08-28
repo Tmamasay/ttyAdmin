@@ -39,26 +39,27 @@ export function filterAsyncRoutes(routes, roles) {
 // 定义子路由跳转页面
 export const componentsMap = {
   roleManager: () => import('@/views/power/index'), // 角色管理
-  userManager: () => import('@/views/kzt_admin/xfjl'), // 控制台-订单记录
+  userManager: () => import('@/views/userManager/userList'), // 会员管理-会员列表
+  newManager: () => import('@/views/Notice/index') // 会员管理-会员列表
 
-  homePage: () => import('@/views/dashboard/busIndex'), // 控制台-首页
-  managerHomePage: () => import('@/views/dashboard/index'), // 控制台-首页
-  Recharge: () => import('@/views/kzt_admin/cz'), // 控制台-充值
-  recordsHistory: () => import('@/views/kzt_admin/xfjl'), // 控制台-消费记录
-  orderHistory: () => import('@/views/kzt_admin/ddjl'), // 控制台-订单记录
-  seatManagement: () => import('@/views/seats_admin/index'), // 坐席管理
-  seatHistoryLogs: () => import('@/views/billManagement/history'), // 历史
+  // homePage: () => import('@/views/dashboard/busIndex'), // 控制台-首页
+  // managerHomePage: () => import('@/views/dashboard/index'), // 控制台-首页
+  // Recharge: () => import('@/views/kzt_admin/cz'), // 控制台-充值
+  // recordsHistory: () => import('@/views/kzt_admin/xfjl'), // 控制台-消费记录
+  // orderHistory: () => import('@/views/kzt_admin/ddjl'), // 控制台-订单记录
+  // seatManagement: () => import('@/views/seats_admin/index'), // 坐席管理
+  // seatHistoryLogs: () => import('@/views/billManagement/history'), // 历史
 
-  organizationalStructure: () => import('@/views/organizational_structure/index'), // 组织架构
-  departmentManagement: () => import('@/views/organizational_structure/index'),
-  personnelManagement: () => import('@/views/organizational_structure/index'),
-  callRecords: () => import('@/views/billManagement/index'),
-  personalRecords: () => import('@/views/billManagement/grhd'),
-  uploadCustomer: () => import('@/views/number/index'),
-  customerResource: () => import('@/views/number/allNumber'),
-  privateResource: () => import('@/views/number/perNumber'),
-  templateManager: () => import('@/views/number/sign'),
-  smsLog: () => import('@/views/number/personalMes')
+  // organizationalStructure: () => import('@/views/organizational_structure/index'), // 组织架构
+  // departmentManagement: () => import('@/views/organizational_structure/index'),
+  // personnelManagement: () => import('@/views/organizational_structure/index'),
+  // callRecords: () => import('@/views/billManagement/index'),
+  // personalRecords: () => import('@/views/billManagement/grhd'),
+  // uploadCustomer: () => import('@/views/number/index'),
+  // customerResource: () => import('@/views/number/allNumber'),
+  // privateResource: () => import('@/views/number/perNumber'),
+  // templateManager: () => import('@/views/number/sign'),
+  // smsLog: () => import('@/views/number/personalMes')
 }
 /**
  *对component的处理

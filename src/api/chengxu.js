@@ -49,6 +49,40 @@ export function getUsersPage(data) {
   })
 }
 
+// 通过customer_id查询实名信息
+export function getCompanyByCustomerId(data) {
+  return request({
+    url: '/th-manager-biz/userManager/getCompanyByCustomerId',
+    method: 'post',
+    data
+  })
+}
+// 资讯管理分页
+export function selectPageNotice(data) {
+  return request({
+    url: '/th-manager-biz/private-product/selectPageNotice',
+    method: 'post',
+    data
+  })
+}
+
+// 上传
+export function fileUpload(data) {
+  return request({
+    url: '/th-manager-biz/login/fileUpload',
+    method: 'post',
+    data
+  })
+}
+// 新增资讯
+export function addNotice(data) {
+  return request({
+    url: '/th-manager-biz/private-product/addNotice',
+    method: 'post',
+    data
+  })
+}
+
 // 话单总览
 export function selectAllCallLogPage(data) {
   return request({
