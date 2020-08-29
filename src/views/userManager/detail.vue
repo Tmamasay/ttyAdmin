@@ -7,31 +7,31 @@
       <div class="isTrue">
         <el-form :inline="true" class="demo-form-inline">
           <el-form-item label="用户名：" style="width:350px">
-            <el-input v-model="query.callerNum" :readonly="true" />
+            <el-input v-model="companyAuth.user.name" :readonly="true" />
           </el-form-item>
           <el-form-item label="公司名称：" style="width:350px">
-            <el-input v-model="query.callerNum" :readonly="true" />
+            <el-input v-model="companyAuth.user.companyName" :readonly="true" />
           </el-form-item>
           <el-form-item label="职位：" style="width:350px">
-            <el-input v-model="query.callerNum" :readonly="true" />
+            <el-input v-model="companyAuth.user.position" :readonly="true" />
           </el-form-item>
           <el-form-item label="会员注册日期：" style="width:350px">
-            <el-input v-model="query.callerNum" :readonly="true" />
+            <el-input v-model="companyAuth.user.createTime" :readonly="true" />
           </el-form-item>
           <el-form-item label="手机号：" style="width:350px">
-            <el-input v-model="query.callerNum" :readonly="true" />
+            <el-input v-model="companyAuth.user.username" :readonly="true" />
           </el-form-item>
           <el-form-item label="服务器预计容量：" style="width:350px">
-            <el-input v-model="query.callerNum" :readonly="true" />
+            <el-input v-model="companyAuth.user.name" :readonly="true" />
           </el-form-item>
           <el-form-item label="已使用容量：" style="width:350px">
-            <el-input v-model="query.callerNum" :readonly="true" />
+            <el-input v-model="companyAuth.user.name" :readonly="true" />
           </el-form-item>
           <el-form-item label="使用容量百分比：" style="width:350px">
-            <el-input v-model="query.callerNum" :readonly="true" />
+            <el-input v-model="companyAuth.user.name" :readonly="true" />
           </el-form-item>
           <el-form-item label="状态：" style="width:350px">
-            <el-input v-model="query.callerNum" :readonly="true" />
+            <el-input v-model="companyAuth.user.status" :readonly="true" />
           </el-form-item>
         </el-form>
       </div>
@@ -44,22 +44,22 @@
       <div v-if="companyAuth" class="isTrue">
         <el-form :inline="true" class="demo-form-inline">
           <el-form-item label="公司名称：" style="width:500px">
-            <el-input v-model="companyAuth.companyName" :readonly="true" />
+            <el-input v-model="companyAuth.customer.companyName" :readonly="true" />
           </el-form-item>
           <el-form-item label="统一社会信用代码/注册号/组织机构代码：" style="width:500px">
-            <el-input v-model="companyAuth.companyCode" :readonly="true" />
+            <el-input v-model="companyAuth.customer.companyCode" :readonly="true" />
           </el-form-item>
           <el-form-item label="公司注册地址：" style="width:500px">
-            <el-input v-model="companyAuth.address" :readonly="true" />
+            <el-input v-model="companyAuth.customer.address" :readonly="true" />
           </el-form-item>
           <el-form-item label="注册日期：" style="width:500px">
-            <el-input v-model="companyAuth.companyTime" :readonly="true" />
+            <el-input v-model="companyAuth.customer.companyTime" :readonly="true" />
           </el-form-item>
           <el-form-item label="经营期限至：" style="width:500px">
-            <el-input v-model="companyAuth.limitTime" :readonly="true" />
+            <el-input v-model="companyAuth.customer.limitTime" :readonly="true" />
           </el-form-item>
           <el-form-item label="营业执照：" style="width:500px">
-            <el-input v-model="companyAuth.companyImg" :readonly="true" />
+            <el-input v-model="companyAuth.customer.companyImg" :readonly="true" />
           </el-form-item>
         </el-form>
       </div>
@@ -77,24 +77,25 @@
         <p class="Ptitle">审核意见</p>
       </div>
       <div>
-        <textarea rows="10" cols="180" style="padding:6px 8px" placeholder="请输入审核意见" />
+        <textarea v-model="reason" rows="10" cols="180" style="padding:6px 8px" placeholder="请输入审核意见" />
       </div>
     </div>
 
     <div v-if="+companySgin===1" slot="footer" class="dialog-footer" style="margin-left:45%;margin-top:40px">
-      <el-button size="medium" type="danger" @click="quxiao_wh('whData')">未通过</el-button>
-      <el-button size="medium" type="primary" @click="boda('whData')">通 过</el-button>
+      <el-button size="medium" type="danger" @click="checkAuth(3)">未通过</el-button>
+      <el-button size="medium" type="primary" @click="checkAuth(2)">通 过</el-button>
     </div>
 
   </div>
 </template>
 
 <script>
-import { getCompanyByCustomerId, getUsable } from '@/api/chengxu'
+import { getCompanyByCustomerId, getUsable,updateCompanyStatus } from '@/api/chengxu'
 import { getcustomerId } from '@/utils/auth'
 export default {
   data() {
     return {
+      reason:null,
       companyAuth: null,
       companySgin: null,
       query: {
@@ -116,6 +117,27 @@ export default {
     this.getNum()
   },
   methods: {
+    async checkAuth(e){
+
+       await updateCompanyStatus({
+        param: {
+          id: this.companyAuth.user.id,
+          reason: this.reason,
+          status: e
+        }
+      }).then(res => {
+        console.log(res)
+        if (res.statusCode === '00000') {
+           this.$message({
+            message: '操作成功',
+            type: 'success',
+            duration: 3 * 1000
+          })
+            this.$router.go(-1);//返回上一层
+        }
+      })
+
+    },
     async getNum() {
       await getUsable({
         param: {

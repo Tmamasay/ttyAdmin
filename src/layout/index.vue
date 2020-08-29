@@ -8,16 +8,16 @@
       </div>
       <app-main />
       <!-- <right-panel v-if="showSettings"> -->
-      <right-panel>
+      <!-- <right-panel>
         <settings />
-      </right-panel>
+      </right-panel> -->
     </div>
   </div>
 </template>
 
 <script>
-import RightPanel from '@/components/RightPanel'
-import { Navbar, Sidebar, AppMain, Settings } from './components'
+// import RightPanel from '@/components/RightPanel'
+import { Navbar, Sidebar, AppMain } from './components'
 import ResizeMixin from './mixin/ResizeHandler'
 
 export default {
@@ -25,9 +25,9 @@ export default {
   components: {
     Navbar,
     Sidebar,
-    Settings,
-    AppMain,
-    RightPanel
+    // Settings,
+    AppMain
+    // RightPanel
   },
   mixins: [ResizeMixin],
   computed: {

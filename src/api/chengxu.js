@@ -82,7 +82,14 @@ export function addNotice(data) {
     data
   })
 }
-
+// 审核实名信息
+export function updateCompanyStatus(data) {
+  return request({
+    url: '/th-manager-biz/userManager/updateCompanyStatus',
+    method: 'post',
+    data
+  })
+}
 // 话单总览
 export function selectAllCallLogPage(data) {
   return request({
