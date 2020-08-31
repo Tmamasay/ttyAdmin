@@ -90,12 +90,12 @@
 </template>
 
 <script>
-import { getCompanyByCustomerId, getUsable,updateCompanyStatus } from '@/api/chengxu'
+import { getCompanyByCustomerId, getUsable, updateCompanyStatus } from '@/api/chengxu'
 import { getcustomerId } from '@/utils/auth'
 export default {
   data() {
     return {
-      reason:null,
+      reason: null,
       companyAuth: null,
       companySgin: null,
       query: {
@@ -117,9 +117,8 @@ export default {
     this.getNum()
   },
   methods: {
-    async checkAuth(e){
-
-       await updateCompanyStatus({
+    async checkAuth(e) {
+      await updateCompanyStatus({
         param: {
           id: this.companyAuth.user.id,
           reason: this.reason,
@@ -128,15 +127,14 @@ export default {
       }).then(res => {
         console.log(res)
         if (res.statusCode === '00000') {
-           this.$message({
+          this.$message({
             message: '操作成功',
             type: 'success',
             duration: 3 * 1000
           })
-            this.$router.go(-1);//返回上一层
+          this.$router.go(-1)// 返回上一层
         }
       })
-
     },
     async getNum() {
       await getUsable({

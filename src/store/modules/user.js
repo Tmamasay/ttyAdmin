@@ -2,7 +2,7 @@
 import { userLogin, getMyMenus, loginOut } from '@/api/framework'
 import { removeToken, removeisOpen, removeRefreshToken, removeInfo, removecustomerId, getToken, setToken, setRefreshToken, getInfoo, setcustomerId } from '@/utils/auth'
 import { resetRouter, constantRoutes } from '@/router'
-// import { constantRoutes } from '@/router'
+import { ttyMD5 } from '@/utils'
 import Layout from '@/layout'
 
 const getDefaultState = () => {
@@ -48,7 +48,7 @@ const actions = {
       var data = {
         param: {
           username: username.trim(),
-          password: password,
+          password: ttyMD5(password),
           sysName: 'tyteen',
           loginType: 'tyteen',
           clientPassword: 'nfjkMaHiO4Wz42Fb1jNVWlilUzBXxwqD'

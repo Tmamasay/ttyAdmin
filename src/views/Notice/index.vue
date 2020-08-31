@@ -30,20 +30,20 @@
       <el-table-column prop="source" label="来源" />
       <el-table-column prop="remark" label="摘要" />
       <el-table-column prop="title" label="标题" />
-      <el-table-column prop="noticeImg" label="正文">
+      <el-table-column prop="textBody" label="正文">
         <template slot-scope="scope">
           <p v-html="scope.row.textBody" />
         </template>
       </el-table-column>
       <el-table-column prop="releaseTime" label="发布时间" />
-      <!-- <el-table-column
+      <el-table-column
         label="编辑"
       >
         <template slot-scope="scope">
-          <span v-if="scope.row.companyStatus!==1" style="color:#00c48f;cursor: pointer;" @click="goDetail(scope.row.companyStatus,scope.row.customerId)">查看</span>
-          <span v-else style="color:red;cursor: pointer;" @click="goDetail(scope.row.companyStatus,scope.row.customerId)">去审核</span>
+          <span style="color:#00c48f;cursor: pointer;" @click="goEdit(scope.row)">编辑</span>
+          <span style="color:red;cursor: pointer;padding-left:10px" @click="removeZX(scope.row)">删除</span>
         </template>
-      </el-table-column> -->
+      </el-table-column>
     </el-table>
     <div class="block fenye">
       <el-pagination
@@ -70,6 +70,8 @@
             <el-upload
               list-type="picture-card"
               action
+              :file-list="fileList"
+              :show-file-list="true"
               :http-request="uploadFile"
               :limit="1"
               :on-change="handlePreview"
@@ -113,12 +115,13 @@
 </template>
 
 <script>
-import { selectPageNotice, addNotice, fileUpload } from '@/api/chengxu'
+import { selectPageNotice, delNotice, updateNotice, addNotice, fileUpload } from '@/api/chengxu'
 import EditorImage from '@/components/Tinymce/index' // 富文本编辑
 export default {
   components: { EditorImage },
   data() {
     return {
+      fileList: [],
       uploadData: null,
       dialogVisible: false,
       time: null,
@@ -168,6 +171,21 @@ export default {
     this.getlist()
   },
   methods: {
+    goEdit(row) {
+      this.dialogVisible = true
+      this.addZxData = {
+        id: row.id,
+        noticeImg: row.noticeImg,
+        releaseTime: row.releaseTime,
+        remark: row.remark,
+        source: row.source,
+        textBody: row.textBody,
+        title: row.title
+      }
+      this.fileList.push({
+        url: row.noticeImg
+      })
+    },
     // 时间戳转换
     formatDate(value) {
       const date = new Date(value)
@@ -185,6 +203,7 @@ export default {
       return y + '-' + MM + '-' + d + ' ' + h + ':' + m + ':' + s
     },
     addZx() {
+      this.fileList = []
       this.dialogVisible = true
       this.addZxData = {
         noticeImg: '',
@@ -247,7 +266,7 @@ export default {
         }
       })
     },
-    // 新增坐席、修改坐席提交
+    // 新增
     async zx_submit(formName) {
       const _this = this
       await _this.$refs[formName].validate((valid) => {
@@ -256,61 +275,44 @@ export default {
           const data = {
             param: this.addZxData
           }
-          addNotice(data).then(res => {
-            console.log(res)
-            if (res.statusCode === '00000') {
-              this.dialogVisible = false
-            }
-          })
+          if (this.addZxData.id) {
+            updateNotice(data).then(res => {
+              console.log(res)
+              if (res.statusCode === '00000') {
+                this.dialogVisible = false
+                this.getlist()
+              }
+            })
+          } else {
+            addNotice(data).then(res => {
+              console.log(res)
+              if (res.statusCode === '00000') {
+                this.dialogVisible = false
+                this.getlist()
+              }
+            })
+          }
         }
       })
     },
 
-    // 获取用户id和name
-    getUser1(e) {
-      console.log(e)
-      var obj = {}
-      obj = this.userData.find((item) => item.uid === e)
-      console.log(obj)
-      //   this.addZxData.name = obj.name
-      // this.addZxData.id = obj.id
-      this.addZxData.uid = obj.uid
-    },
     // 删除坐席
     async removeZX(e) {
-      const _this = this
-      console.log(e)
-      // var data = {
-      //   param: {
-      //     id: e.id
-      //   }
-      // }
-      await _this.$confirm('坐席删除后，本月月租将不进行返还。如需变更坐席绑定人员，请直接进行坐席修改。是否确认删除？', '提示', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        // delSeat(data).then(res => {
-        //   console.log(res)
-        //   if (res.statusCode === '00000') {
-        //     _this.$message({ message: '删除成功', type: 'success' })
-        //     _this.getlist()
-        //   }
-        // })
-      }).catch(() => {
-        _this.$message({
-          type: 'info',
-          message: '已取消删除'
-        })
+      const data = {
+        id: e.id
+      }
+      delNotice(data).then(res => {
+        console.log(res)
+        if (res.statusCode === '00000') {
+          this.$message({ message: '删除成功', type: 'success' })
+          this.getlist()
+        }
       })
     },
     // 搜索
     search() {
-      debugger
-      const _this = this
-      _this.hwCurrent = 1
-
-      _this.getlist()
+      this.hwCurrent = 1
+      this.getlist()
     },
     // 修改表格头部颜色
     tableHeaderColor({ row, column, rowIndex, columnIndex }) {
@@ -326,16 +328,6 @@ export default {
     handleCurrentChange(val) {
       this.hwCurrent = val
       this.getlist()
-    },
-
-    // 关闭弹窗清楚验证-外呼
-    handleClose_wh() {
-      this.$refs.whData.resetFields()
-    },
-    // 清除表单验证-外呼
-    quxiao_wh(formName) {
-      this.dialogVisible_wh = false
-      this.$refs[formName].clearValidate()
     }
   }
 }

@@ -82,6 +82,55 @@ export function addNotice(data) {
     data
   })
 }
+// 修改资讯
+export function updateNotice(data) {
+  return request({
+    url: '/th-manager-biz/private-product/updateNotice',
+    method: 'post',
+    data
+  })
+}
+// 删除资讯
+export function delNotice(data) {
+  return request({
+    url: '/th-manager-biz/private-product/delNotice',
+    method: 'post',
+    data
+  })
+}
+// 全部管理员分页
+export function selectUserManagerList(data) {
+  return request({
+    url: '/th-manager-biz/login/selectUserManagerList',
+    method: 'post',
+    data
+  })
+}
+// 修改管理员
+export function updateUserManager(data) {
+  return request({
+    url: '/th-manager-biz/login/updateUserManager',
+    method: 'post',
+    data
+  })
+}
+// 删除管理员
+export function deleteUserManager(data) {
+  return request({
+    url: '/th-manager-biz/login/deleteUserManager',
+    method: 'post',
+    data
+  })
+}
+// 全部角色下拉列表
+export function selectRoleList(data) {
+  return request({
+    url: '/th-manager-biz/rolePowerManager/selectRoleList',
+    method: 'post',
+    data
+  })
+}
+
 // 审核实名信息
 export function updateCompanyStatus(data) {
   return request({

@@ -1,6 +1,11 @@
 /**
  * Created by PanJiaChen on 16/11/18.
  */
+import md5 from 'js-md5'
+// md5加密
+export const ttyMD5 = (passworld) => {
+  return md5(passworld).toUpperCase()
+}
 
 /**
  * Parse the time to string
