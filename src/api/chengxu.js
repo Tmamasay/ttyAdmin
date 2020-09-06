@@ -131,6 +131,15 @@ export function selectRoleList(data) {
   })
 }
 
+// 新增管理员
+export function addUserManager(data) {
+  return request({
+    url: '/th-manager-biz/login/addUserManager',
+    method: 'post',
+    data
+  })
+}
+
 // 审核实名信息
 export function updateCompanyStatus(data) {
   return request({

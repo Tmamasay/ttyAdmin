@@ -64,15 +64,64 @@
         @current-change="handleCurrentChange"
       />
     </div>
+    <!-- 用户操作 -->
+    <el-dialog
+      title="用户操作"
+      :visible.sync="dialogVisible_yh"
+      :close-on-click-modal="false"
+      width="30%"
+    >
+      <el-form v-if="dialogVisible_yh" ref="yhData" label-width="100px" :model="yhData" :rules="rulesyh">
+        <el-form-item label="用户名" prop="username">
+          <el-input v-model="yhData.username" placeholder="请输入用户名" style="width:65%" />
+        </el-form-item>
+        <el-form-item label="角色" prop="roleId">
+          <el-select v-model="yhData.roleId" style="width:65%" placeholder="请选择角色">
+            <el-option
+              v-for="item in options"
+              :key="item.id"
+              :label="item.roleName"
+              :value="item.id"
+            />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="登录密码" prop="password">
+          <el-input v-model="yhData.password" type="password" style="width:65%" placeholder="请输入登录密码" />
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogVisible_yh=false">取 消</el-button>
+        <el-button type="primary" @click="addUser('yhData')">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-import { selectUserManagerList, getUsable } from '@/api/chengxu'
-import { getcustomerId } from '@/utils/auth'
+import { selectUserManagerList, updateUserManager, deleteUserManager, selectRoleList, addUserManager } from '@/api/chengxu'
+// import { ttyMD5 } from '@/utils'
 export default {
   data() {
     return {
+      options: [],
+      dialogVisible_yh: false,
+      yhData: {
+        password: '',
+        roleId: '',
+        username: ''
+      },
+      rulesyh: {
+        username: [
+          { required: true, message: '请输入用户名', trigger: 'blur' }
+        ],
+        roleId: [
+          { required: true, message: '请选择角色', trigger: 'change' }
+        ],
+        password: [
+          { required: true, message: '请输入登录密码', trigger: 'change' }
+        ]
+
+      },
       datalist: [],
       yueNum: 0,
       Size: 10, // 一页多少条
@@ -85,24 +134,80 @@ export default {
   },
   mounted() {
     this.getlist()
-    this.getNum()
   },
   methods: {
+    removeZX(row) {
+      deleteUserManager({
+        param: {
+          id: row.id,
+          sysName: 'tyteen'
+        }
+      }).then(res => {
+        if (res.statusCode === '00000') {
+          this.$message({ message: '操作成功', type: 'success' })
+          this.getlist()
+        }
+      })
+    },
+    async addUser(formName) {
+      const _this = this
+      await _this.$refs[formName].validate((valid) => {
+        if (valid) {
+          if (!this.yhData.id) {
+            // this.yhData.password = ttyMD5(this.yhData.password)
+            addUserManager({
+              param: this.yhData
+            }).then(res => {
+              if (res.statusCode === '00000') {
+                _this.$message({ message: '操作成功', type: 'success' })
+                _this.dialogVisible_yh = false
+                _this.getlist()
+              }
+            })
+          } else {
+            updateUserManager({
+              param: this.yhData
+            }).then(res => {
+              if (res.statusCode === '00000') {
+                _this.$message({ message: '操作成功', type: 'success' })
+                _this.dialogVisible_yh = false
+                _this.getlist()
+              }
+            })
+          }
+        }
+      })
+    },
+    goEdit(row) {
+      this.selectRoleList()
+      this.dialogVisible_yh = true
+      this.yhData = {
+        id: row.id,
+        password: row.password,
+        roleId: row.password,
+        username: row.username
+      }
+    },
     addZx() {
-
+      this.dialogVisible_yh = true
+      this.yhData = {
+        password: '',
+        roleId: '',
+        username: ''
+      }
+      this.selectRoleList()
     },
     goDetail(e, v) {
       this.$router.push({ path: '/detial', query: { companyStatus: e, customerId: v }})
     },
-    async getNum() {
-      await getUsable({
+    async selectRoleList() {
+      await selectRoleList({
         param: {
-          customerId: getcustomerId()
+          sysName: 'tyteen'
         }
       }).then(res => {
-        console.log(res)
         if (res.statusCode === '00000') {
-          this.yueNum = this.toNum(res.data / 100)
+          this.options = res.data
         }
       })
     },
