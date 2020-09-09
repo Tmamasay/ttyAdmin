@@ -1,24 +1,10 @@
 <template>
   <div class="xfjl_box shaowAll">
     <div class="toolS">
-      <p class="Ptitle">会员列表</p>
+      <p class="Ptitle">私有化部署</p>
       <el-form :inline="true" class="demo-form-inline">
         <el-form-item label="">
-          <el-date-picker
-            v-model="time"
-            type="daterange"
-            range-separator="至"
-            start-placeholder="开始时间"
-            end-placeholder="结束时间"
-          />
-        </el-form-item>
-        <el-form-item label="">
-          <el-select v-model="type" placeholder="请选择消费类型">
-            <el-option label="请选择" value="" />
-            <el-option label="充值" value="recharge" />
-            <el-option label="消费" value="consume" />
-            <el-option label="转移" value="transfer" />
-          </el-select>
+          <el-input v-model="companyName" placeholder="请输入公司名称" />
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="sousuo">搜索</el-button>
@@ -32,26 +18,28 @@
       style="width:95%;margin:10px auto 20px auto;"
       highlight-current-row
     >
-      <el-table-column prop="name" label="姓名" />
-      <el-table-column prop="companyName" label="公司名称" />
-      <el-table-column prop="position" label="职位" />
-      <el-table-column prop="gid" label="会员注册日期" />
-      <el-table-column prop="username" label="手机号" />
-      <el-table-column prop="capacity" label="服务器预计容量" />
-      <el-table-column prop="gid" label="已使用容量" />
-      <el-table-column prop="companyStatus" label="状态">
+      <el-table-column
+        type="index"
+        width="50"
+        label="序号"
+      />
+      <el-table-column prop="companyName" label="公司名" />
+      <el-table-column prop="phone" label="联系方式" />
+      <el-table-column prop="peopleNum" label="使用人数" />
+      <el-table-column prop="createTime" width="180" label="添加时间">
         <template slot-scope="scope">
-          {{ +scope.row.companyStatus===0?'未认证':+scope.row.companyStatus===1?'待审核':+scope.row.companyStatus===2?'已认证':'已驳回' }}
+          {{ formatDate(scope.row.createTime) }}
         </template>
       </el-table-column>
-      <el-table-column
+
+      <!-- <el-table-column
         label="编辑"
       >
         <template slot-scope="scope">
-          <span v-if="scope.row.companyStatus!==1" style="color:#00c48f;cursor: pointer;" @click="goDetail(scope.row.companyStatus,scope.row.customerId)">查看</span>
-          <span v-else style="color:red;cursor: pointer;" @click="goDetail(scope.row.companyStatus,scope.row.customerId)">去审核</span>
+          <span style="color:#00c48f;cursor: pointer;" @click="goEdit(scope.row)">编辑</span>
+          <span style="color:red;cursor: pointer;padding-left:10px" @click="removeZX(scope.row)">删除</span>
         </template>
-      </el-table-column>
+      </el-table-column> -->
     </el-table>
     <div class="block fenye">
       <el-pagination
@@ -68,10 +56,12 @@
 </template>
 
 <script>
-import { getUsersPage } from '@/api/chengxu'
+import { selectCustomerPage } from '@/api/chengxu'
+// import { ttyMD5 } from '@/utils'
 export default {
   data() {
     return {
+
       datalist: [],
       yueNum: 0,
       Size: 10, // 一页多少条
@@ -79,6 +69,7 @@ export default {
       total: 0, // 总数
       time: null,
       type: null,
+      companyName: null,
       loading: false // loading加载
     }
   },
@@ -86,24 +77,19 @@ export default {
     this.getlist()
   },
   methods: {
-    goDetail(e, v) {
-      this.$router.push({ path: '/detial', query: { companyStatus: e, customerId: v }})
-    },
+
     getlist() {
       const _this = this
       _this.loading = true
       var data = {
         param: {
-          name: '',
-          companyName: '',
-          phone: '',
+          companyName: _this.companyName,
           pageNum: _this.Current,
-          pageSize: _this.Size,
-          startTime: _this.time ? new Date(_this.time[0]).getTime() : '',
-          endTime: _this.time ? new Date(_this.time[1]).getTime() + 86399999 : ''
+          pageSize: _this.Size
+
         }
       }
-      getUsersPage(data).then(res => {
+      selectCustomerPage(data).then(res => {
         console.log(res)
         if (res.statusCode === '00000') {
           setTimeout(res => {

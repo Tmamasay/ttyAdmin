@@ -8,6 +8,14 @@ export function getSysMenus(data) {
     data
   })
 }
+// 私有化信息分页
+export function selectCustomerPage(data) {
+  return request({
+    url: '/th-manager-biz/private-product/selectCustomerPage',
+    method: 'post',
+    data
+  })
+}
 // 企业角色管理分页
 export function selectRolePage(data) {
   return request({

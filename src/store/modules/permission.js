@@ -41,7 +41,8 @@ export const componentsMap = {
   roleManager: () => import('@/views/power/index'), // 角色管理
   userManager: () => import('@/views/userManager/userList'), // 会员管理-会员列表
   newManager: () => import('@/views/Notice/index'), // 资讯
-  adminManager: () => import('@/views/userManager/manager') // 角色管理
+  adminManager: () => import('@/views/userManager/manager'), // 角色管理
+  private: () => import('@/views/userManager/deployment') // 私有化部署
 
   // homePage: () => import('@/views/dashboard/busIndex'), // 控制台-首页
   // managerHomePage: () => import('@/views/dashboard/index'), // 控制台-首页
