@@ -64,13 +64,13 @@
           <el-input v-model.number="whData.qyTell" placeholder="请输入企业微信绑定电话" />
         </el-form-item> -->
         <el-form-item label="原密码" prop="oldmm">
-          <el-input v-model.number="xgmmData.oldmm" type="password" placeholder="请输入原密码" />
+          <el-input v-model="xgmmData.oldmm" type="password" placeholder="请输入原密码" />
         </el-form-item>
         <el-form-item label="新密码" prop="newmm">
-          <el-input v-model.number="xgmmData.newmm" type="password" placeholder="请输入新密码" />
+          <el-input v-model="xgmmData.newmm" type="password" placeholder="请输入新密码" />
         </el-form-item>
         <el-form-item label="确认密码" prop="newmm1">
-          <el-input v-model.number="xgmmData.newmm1" type="password" placeholder="再次确认新密码" />
+          <el-input v-model="xgmmData.newmm1" type="password" placeholder="再次确认新密码" />
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
@@ -85,7 +85,8 @@
 import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
-import { removeToken, removeRefreshToken, getisOpen, setisOpen, removeInfo, getcustomerId, removecustomerId } from '@/utils/auth'
+import { ttyMD5 } from '@/utils'
+import { removeToken, removeRefreshToken, getisOpen, setisOpen, removeInfo, removecustomerId } from '@/utils/auth'
 import { callInside, updatePassword } from '@/api/framework'
 export default {
   components: {
@@ -237,9 +238,9 @@ export default {
           }
           var data = {
             param: {
-              customerId: getcustomerId(),
-              oldPassword: _this.xgmmData.oldmm,
-              newPassword: _this.xgmmData.newmm
+              // customerId: getcustomerId(),
+              oldPassWord: ttyMD5(_this.xgmmData.oldmm),
+              newPassWord: ttyMD5(_this.xgmmData.newmm)
             }
           }
           updatePassword(data).then(res => {

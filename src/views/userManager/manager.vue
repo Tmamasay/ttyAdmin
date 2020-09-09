@@ -4,21 +4,7 @@
       <el-button type="primary" style="margin-bottom:20px" @click="addZx">新增管理员</el-button>
       <el-form :inline="true" class="demo-form-inline">
         <el-form-item label="">
-          <el-date-picker
-            v-model="time"
-            type="daterange"
-            range-separator="至"
-            start-placeholder="开始时间"
-            end-placeholder="结束时间"
-          />
-        </el-form-item>
-        <el-form-item label="">
-          <el-select v-model="type" placeholder="请选择消费类型">
-            <el-option label="请选择" value="" />
-            <el-option label="充值" value="recharge" />
-            <el-option label="消费" value="consume" />
-            <el-option label="转移" value="transfer" />
-          </el-select>
+          <el-input v-model="userName" placeholder="请输入管理员" />
         </el-form-item>
         <el-form-item>
           <el-button type="primary" @click="sousuo">搜索</el-button>
@@ -43,7 +29,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="customerId" label="用户名" />
-      <el-table-column prop="name" label="角色" />
+      <el-table-column prop="roleName" label="角色" />
       <el-table-column
         label="编辑"
       >
@@ -85,7 +71,7 @@
             />
           </el-select>
         </el-form-item>
-        <el-form-item label="登录密码" prop="password">
+        <el-form-item v-if="!yhData.id" label="登录密码" prop="password">
           <el-input v-model="yhData.password" type="password" style="width:65%" placeholder="请输入登录密码" />
         </el-form-item>
       </el-form>
@@ -103,6 +89,7 @@ import { selectUserManagerList, updateUserManager, deleteUserManager, selectRole
 export default {
   data() {
     return {
+      userName: '',
       options: [],
       dialogVisible_yh: false,
       yhData: {
@@ -183,8 +170,7 @@ export default {
       this.dialogVisible_yh = true
       this.yhData = {
         id: row.id,
-        password: row.password,
-        roleId: row.password,
+        roleId: row.roleId,
         username: row.username
       }
     },
@@ -216,7 +202,7 @@ export default {
       _this.loading = true
       var data = {
         param: {
-          userName: '',
+          userName: _this.userName,
           pageNum: _this.Current,
           pageSize: _this.Size
 

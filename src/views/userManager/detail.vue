@@ -59,7 +59,12 @@
             <el-input v-model="companyAuth.customer.limitTime" :readonly="true" />
           </el-form-item>
           <el-form-item label="营业执照：" style="width:500px">
-            <el-input v-model="companyAuth.customer.companyImg" :readonly="true" />
+            <el-image
+              style="width: 100px; height: 100px"
+              :src="companyAuth.customer.companyImg"
+            />
+            <!-- <img :src="companyAuth.customer.companyImg" alt="" srcset="" width="100" height="100"> -->
+            <!-- <el-input v-model="companyAuth.customer.companyImg" :readonly="true" /> -->
           </el-form-item>
         </el-form>
       </div>
@@ -90,8 +95,7 @@
 </template>
 
 <script>
-import { getCompanyByCustomerId, getUsable, updateCompanyStatus } from '@/api/chengxu'
-import { getcustomerId } from '@/utils/auth'
+import { getCompanyByCustomerId, updateCompanyStatus } from '@/api/chengxu'
 export default {
   data() {
     return {
@@ -114,7 +118,6 @@ export default {
   mounted() {
     this.companySgin = this.$route.query.companyStatus
     this.getlist()
-    this.getNum()
   },
   methods: {
     async checkAuth(e) {
@@ -133,18 +136,6 @@ export default {
             duration: 3 * 1000
           })
           this.$router.go(-1)// 返回上一层
-        }
-      })
-    },
-    async getNum() {
-      await getUsable({
-        param: {
-          customerId: getcustomerId()
-        }
-      }).then(res => {
-        console.log(res)
-        if (res.statusCode === '00000') {
-          this.yueNum = this.toNum(res.data / 100)
         }
       })
     },

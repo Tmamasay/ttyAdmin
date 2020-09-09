@@ -175,7 +175,7 @@ export function selectRoleList(data) {
 // 账号修改密码
 export function updatePassword(data) {
   return request({
-    url: '/kl-auth-biz/login/updatePassword',
+    url: '/th-manager-biz/login/updateUserPassword',
     method: 'post',
     data
   })
@@ -207,7 +207,7 @@ export function getPage(data) {
 // 用户注销接口
 export function loginOut(data) {
   return request({
-    url: '/kl-auth-biz/login/loginOut',
+    url: '/th-manager-biz/login/loginOut',
     method: 'post',
     data
   })

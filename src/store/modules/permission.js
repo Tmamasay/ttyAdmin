@@ -42,7 +42,8 @@ export const componentsMap = {
   userManager: () => import('@/views/userManager/userList'), // 会员管理-会员列表
   newManager: () => import('@/views/Notice/index'), // 资讯
   adminManager: () => import('@/views/userManager/manager'), // 角色管理
-  private: () => import('@/views/userManager/deployment') // 私有化部署
+  private: () => import('@/views/userManager/deployment'), // 私有化部署
+  orderManager: () => import('@/views/userManager/order') // 订单列表
 
   // homePage: () => import('@/views/dashboard/busIndex'), // 控制台-首页
   // managerHomePage: () => import('@/views/dashboard/index'), // 控制台-首页
@@ -127,16 +128,16 @@ function convertRouter(asyncRouterMap) {
     asyncRouterMap.forEach(item => {
       // this.set(item, 0, arricon[0])
       switch (item.menuName) {
-        case '控制台':
+        case '网站统计':
           item.icon = kzt_icon[0]
           break
-        case '组织架构':
+        case '订单管理':
           item.icon = zzjg_icon[0]
           break
-        case '坐席管理':
+        case '会员管理':
           item.icon = zxgl_icon[0]
           break
-        case '话单管理':
+        case '新闻资讯':
           item.icon = hdgl_icon[0]
           break
         case '系统管理':

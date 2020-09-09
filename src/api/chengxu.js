@@ -16,6 +16,14 @@ export function selectCustomerPage(data) {
     data
   })
 }
+// 订单分页列表
+export function selectOrder(data) {
+  return request({
+    url: '/th-manager-biz/orderManager/selectOrder',
+    method: 'post',
+    data
+  })
+}
 // 企业角色管理分页
 export function selectRolePage(data) {
   return request({

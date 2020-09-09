@@ -4,10 +4,10 @@
       <p class="Ptitle">会员列表</p>
       <el-form :inline="true" class="demo-form-inline">
         <el-form-item label="">
-          <el-input v-model="companyName" placeholder="请输入公司名称" />
+          <el-input v-model="orderId" placeholder="请输入订单id" />
         </el-form-item>
         <el-form-item label="">
-          <el-input v-model="phone" placeholder="请输入手机号" />
+          <el-input v-model="companyName" placeholder="请输入公司名称" />
         </el-form-item>
         <el-form-item label="">
           <el-date-picker
@@ -31,16 +31,27 @@
       style="width:95%;margin:10px auto 20px auto;"
       highlight-current-row
     >
-      <el-table-column prop="name" label="姓名" />
+      <el-table-column prop="orderId" label="订单号" />
       <el-table-column prop="companyName" label="公司名称" />
-      <el-table-column prop="position" label="职位" />
-      <el-table-column prop="gid" label="会员注册日期" />
-      <el-table-column prop="username" label="手机号" />
-      <el-table-column prop="capacity" label="服务器预计容量" />
-      <el-table-column prop="gid" label="已使用容量" />
-      <el-table-column prop="companyStatus" label="状态">
+      <el-table-column prop="years" label="购买年限" />
+      <el-table-column prop="productName" label="订购版本" />
+      <el-table-column label="使用人数">
         <template slot-scope="scope">
-          {{ +scope.row.companyStatus===0?'未认证':+scope.row.companyStatus===1?'待审核':+scope.row.companyStatus===2?'已认证':'已驳回' }}
+          {{ scope.row.minNum }}-{{ scope.row.maxNum }}人
+        </template>
+      </el-table-column>
+      <el-table-column prop="payTime" label="支付时间" />
+      <el-table-column prop="price" label="支付金额" />
+
+      <el-table-column prop="payType" label="支付方式">
+        <template slot-scope="scope">
+          {{ +scope.row.payType===0?'支付宝':+scope.row.payType===1?'微信':+scope.row.payType===2?'银行卡':+scope.row.payType===3?'试用':'未知' }}
+        </template>
+      </el-table-column>
+      <el-table-column prop="endTime" label="到期时间" />
+      <el-table-column prop="payStatus" label="状态">
+        <template slot-scope="scope">
+          {{ +scope.row.payStatus===0?'未支付':+scope.row.payStatus===1?'已支付':+scope.row.payStatus===2&&+scope.row.payType===2?'待收款':+scope.row.payType===3?'试用':'未知' }}
         </template>
       </el-table-column>
       <el-table-column
@@ -67,12 +78,12 @@
 </template>
 
 <script>
-import { getUsersPage } from '@/api/chengxu'
+import { selectOrder } from '@/api/chengxu'
 export default {
   data() {
     return {
       companyName: '',
-      phone: '',
+      orderId: '',
       datalist: [],
       yueNum: 0,
       Size: 10, // 一页多少条
@@ -96,14 +107,14 @@ export default {
       var data = {
         param: {
           companyName: this.companyName,
-          phone: this.phone,
+          orderId: this.orderId,
           pageNum: _this.Current,
           pageSize: _this.Size,
           startTime: _this.time ? new Date(_this.time[0]).getTime() : '',
           endTime: _this.time ? new Date(_this.time[1]).getTime() + 86399999 : ''
         }
       }
-      getUsersPage(data).then(res => {
+      selectOrder(data).then(res => {
         console.log(res)
         if (res.statusCode === '00000') {
           setTimeout(res => {
