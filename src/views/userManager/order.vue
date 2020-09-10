@@ -40,7 +40,8 @@
           {{ scope.row.minNum }}-{{ scope.row.maxNum }}人
         </template>
       </el-table-column>
-      <el-table-column prop="payTime" label="支付时间" />
+
+      <el-table-column prop="payTime" label="支付时间" :formatter="dateFormat" />
       <el-table-column prop="price" label="支付金额" />
 
       <el-table-column prop="payType" label="支付方式">
@@ -48,18 +49,18 @@
           {{ +scope.row.payType===0?'支付宝':+scope.row.payType===1?'微信':+scope.row.payType===2?'银行卡':+scope.row.payType===3?'试用':'未知' }}
         </template>
       </el-table-column>
-      <el-table-column prop="endTime" label="到期时间" />
+      <el-table-column prop="endTime" label="到期时间" :formatter="dateFormat" />
       <el-table-column prop="payStatus" label="状态">
         <template slot-scope="scope">
-          {{ +scope.row.payStatus===0?'未支付':+scope.row.payStatus===1?'已支付':+scope.row.payStatus===2&&+scope.row.payType===2?'待收款':+scope.row.payType===3?'试用':'未知' }}
+          {{ +scope.row.payStatus===0?'未支付':+scope.row.payStatus===1?'已支付':+scope.row.payStatus===2&&+scope.row.payType===2?'待收款':+scope.row.payStatus===3?'试用':'未知' }}
         </template>
       </el-table-column>
       <el-table-column
         label="编辑"
       >
         <template slot-scope="scope">
-          <span v-if="scope.row.companyStatus!==1" style="color:#00c48f;cursor: pointer;" @click="goDetail(scope.row.companyStatus,scope.row.customerId)">查看</span>
-          <span v-else style="color:red;cursor: pointer;" @click="goDetail(scope.row.companyStatus,scope.row.customerId)">去审核</span>
+          <span v-if="+scope.row.payStatus===2&&+scope.row.payType===2" style="color:red;cursor: pointer;" @click="goDetail(scope.row.id)">去收款</span>
+          <span v-else style="color:#00c48f;cursor: pointer;" @click="goDetail(scope.row.id)">查看</span>
         </template>
       </el-table-column>
     </el-table>
@@ -79,6 +80,7 @@
 
 <script>
 import { selectOrder } from '@/api/chengxu'
+import moment from 'moment'
 export default {
   data() {
     return {
@@ -98,8 +100,8 @@ export default {
     this.getlist()
   },
   methods: {
-    goDetail(e, v) {
-      this.$router.push({ path: '/detial', query: { companyStatus: e, customerId: v }})
+    goDetail(e) {
+      this.$router.push({ path: '/detailOrder', query: { orderId: e }})
     },
     getlist() {
       const _this = this
@@ -127,8 +129,18 @@ export default {
     },
     // 搜索
     sousuo() {
+      this.Current = 1
       this.getlist()
     },
+
+    dateFormat(row, column) {
+      var date = row.payTime
+      if (!date) {
+        return ''
+      }
+      return moment(date).format('YYYY-MM-DD HH:mm:ss')
+    },
+
     // 时间戳转换
     formatDate(value) {
       const date = new Date(value)
@@ -151,11 +163,11 @@ export default {
     },
     // 分页
     handleSizeChange(val) {
-      this.hwSize = val
+      this.Size = val
       this.getlist()
     },
     handleCurrentChange(val) {
-      this.hwCurrent = val
+      this.Current = val
       this.getlist()
     }
   }

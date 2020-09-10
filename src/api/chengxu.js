@@ -24,6 +24,22 @@ export function selectOrder(data) {
     data
   })
 }
+// 去收款接口
+export function orderCollection(data) {
+  return request({
+    url: '/th-manager-biz/orderManager/orderCollection',
+    method: 'post',
+    data
+  })
+}
+// 订单详情
+export function getOrderOne(data) {
+  return request({
+    url: '/th-manager-biz/orderManager/getOrderOne',
+    method: 'post',
+    data
+  })
+}
 // 企业角色管理分页
 export function selectRolePage(data) {
   return request({

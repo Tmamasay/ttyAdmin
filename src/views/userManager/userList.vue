@@ -32,7 +32,7 @@
       highlight-current-row
     >
       <el-table-column prop="name" label="姓名" />
-      <el-table-column prop="companyName" label="公司名称" />
+      <el-table-column prop="customerName" label="公司名称" />
       <el-table-column prop="position" label="职位" />
       <el-table-column prop="gid" label="会员注册日期" />
       <el-table-column prop="username" label="手机号" />
@@ -116,6 +116,7 @@ export default {
     },
     // 搜索
     sousuo() {
+      this.Current = 1
       this.getlist()
     },
     // 时间戳转换
@@ -140,11 +141,11 @@ export default {
     },
     // 分页
     handleSizeChange(val) {
-      this.hwSize = val
+      this.Size = val
       this.getlist()
     },
     handleCurrentChange(val) {
-      this.hwCurrent = val
+      this.Current = val
       this.getlist()
     }
   }

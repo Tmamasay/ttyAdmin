@@ -102,6 +102,7 @@ export default {
     },
     // 搜索
     sousuo() {
+      this.Current = 1
       this.getlist()
     },
     // 时间戳转换
@@ -126,11 +127,11 @@ export default {
     },
     // 分页
     handleSizeChange(val) {
-      this.hwSize = val
+      this.Size = val
       this.getlist()
     },
     handleCurrentChange(val) {
-      this.hwCurrent = val
+      this.Current = val
       this.getlist()
     }
   }

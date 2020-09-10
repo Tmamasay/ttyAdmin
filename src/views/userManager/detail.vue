@@ -74,7 +74,48 @@
       <div class="toolS">
         <p class="Ptitle">订单列表</p>
       </div>
-      <div />
+      <div v-if="companyAuth&&companyAuth.orders.length">
+        <el-table
+          v-loading="loading"
+          :data="companyAuth.orders"
+          tooltip-effect="dark"
+          style="width:95%;margin:10px auto 20px auto;"
+          highlight-current-row
+        >
+          <el-table-column prop="orderId" label="订单号" />
+          <el-table-column prop="companyName" label="公司名称" />
+          <el-table-column prop="years" label="购买年限" />
+          <el-table-column prop="productName" label="订购版本" />
+          <el-table-column label="使用人数">
+            <template slot-scope="scope">
+              {{ scope.row.minNum }}-{{ scope.row.maxNum }}人
+            </template>
+          </el-table-column>
+
+          <el-table-column prop="payTime" label="支付时间" :formatter="dateFormat" />
+          <el-table-column prop="price" label="支付金额" />
+
+          <el-table-column prop="payType" label="支付方式">
+            <template slot-scope="scope">
+              {{ +scope.row.payType===0?'支付宝':+scope.row.payType===1?'微信':+scope.row.payType===2?'银行卡':+scope.row.payType===3?'试用':'未知' }}
+            </template>
+          </el-table-column>
+          <el-table-column prop="endTime" label="到期时间" :formatter="dateFormat" />
+          <el-table-column prop="payStatus" label="状态">
+            <template slot-scope="scope">
+              {{ +scope.row.payStatus===0?'未支付':+scope.row.payStatus===1?'已支付':+scope.row.payStatus===2&&+scope.row.payType===2?'待收款':+scope.row.payStatus===3?'试用':'未知' }}
+            </template>
+          </el-table-column>
+          <el-table-column
+            label="编辑"
+          >
+            <template slot-scope="scope">
+              <span v-if="+scope.row.payStatus===2&&+scope.row.payType===2" style="color:red;cursor: pointer;" @click="goDetail(scope.row.id)">去收款</span>
+              <span v-else style="color:#00c48f;cursor: pointer;" @click="goDetail(scope.row.id)">查看</span>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
     </div>
 
     <div v-if="+companySgin===1">
@@ -120,6 +161,9 @@ export default {
     this.getlist()
   },
   methods: {
+    goDetail(e) {
+      this.$router.push({ path: '/detailOrder', query: { orderId: e }})
+    },
     async checkAuth(e) {
       await updateCompanyStatus({
         param: {
@@ -159,6 +203,7 @@ export default {
     },
     // 搜索
     sousuo() {
+      this.Current = 1
       this.getlist()
     },
     // 时间戳转换
@@ -183,11 +228,11 @@ export default {
     },
     // 分页
     handleSizeChange(val) {
-      this.hwSize = val
+      this.total = val
       this.getlist()
     },
     handleCurrentChange(val) {
-      this.hwCurrent = val
+      this.Current = val
       this.getlist()
     }
   }

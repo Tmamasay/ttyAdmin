@@ -28,7 +28,7 @@
           {{ formatDate(scope.row.createTime) }}
         </template>
       </el-table-column>
-      <el-table-column prop="customerId" label="用户名" />
+      <el-table-column prop="userName" label="用户名" />
       <el-table-column prop="roleName" label="角色" />
       <el-table-column
         label="编辑"
@@ -221,6 +221,7 @@ export default {
     },
     // 搜索
     sousuo() {
+      this.Current = 1
       this.getlist()
     },
     // 时间戳转换
@@ -245,11 +246,11 @@ export default {
     },
     // 分页
     handleSizeChange(val) {
-      this.hwSize = val
+      this.Size = val
       this.getlist()
     },
     handleCurrentChange(val) {
-      this.hwCurrent = val
+      this.Current = val
       this.getlist()
     }
   }

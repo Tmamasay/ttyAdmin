@@ -280,7 +280,9 @@ export default {
               console.log(res)
               if (res.statusCode === '00000') {
                 this.dialogVisible = false
-                this.getlist()
+                setTimeout(() => {
+                  this.getlist()
+                }, 1500)
               }
             })
           } else {
@@ -288,7 +290,9 @@ export default {
               console.log(res)
               if (res.statusCode === '00000') {
                 this.dialogVisible = false
-                this.getlist()
+                setTimeout(() => {
+                  this.getlist()
+                }, 1500)
               }
             })
           }
@@ -299,7 +303,10 @@ export default {
     // 删除坐席
     async removeZX(e) {
       const data = {
-        id: e.id
+        data: {
+          id: e.id
+        }
+
       }
       delNotice(data).then(res => {
         console.log(res)

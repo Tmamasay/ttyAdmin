@@ -54,7 +54,7 @@
                 <svg-icon :icon-class="passwordType === 'password' ? 'eye' : 'eye-open'" />
               </span>
             </el-form-item>
-            <p class="login-form-forgetP" @click="visible = true">忘记密码？</p>
+            <p class="login-form-forgetP" style="display:none" @click="visible = true">忘记密码？</p>
             <el-button
               type="primary"
               style="width:100%;line-height: 20px;margin-top: 40px;font-size:17px"
