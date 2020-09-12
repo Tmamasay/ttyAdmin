@@ -61,6 +61,7 @@
           <el-form-item label="营业执照：" style="width:500px">
             <el-image
               style="width: 100px; height: 100px"
+              @click="showImg"
               :src="companyAuth.customer.companyImg"
             />
             <!-- <img :src="companyAuth.customer.companyImg" alt="" srcset="" width="100" height="100"> -->
@@ -87,30 +88,30 @@
           <el-table-column prop="years" label="购买年限" />
           <el-table-column prop="productName" label="订购版本" />
           <el-table-column label="使用人数">
-            <template slot-scope="scope">
-              {{ scope.row.minNum }}-{{ scope.row.maxNum }}人
-            </template>
+            <template slot-scope="scope">{{ scope.row.minNum }}-{{ scope.row.maxNum }}人</template>
           </el-table-column>
 
           <el-table-column prop="payTime" label="支付时间" :formatter="dateFormat" />
           <el-table-column prop="price" label="支付金额" />
 
           <el-table-column prop="payType" label="支付方式">
-            <template slot-scope="scope">
-              {{ +scope.row.payType===0?'支付宝':+scope.row.payType===1?'微信':+scope.row.payType===2?'银行卡':+scope.row.payType===3?'试用':'未知' }}
-            </template>
+            <template
+              slot-scope="scope"
+            >{{ +scope.row.payType===0?'支付宝':+scope.row.payType===1?'微信':+scope.row.payType===2?'银行卡':+scope.row.payType===3?'试用':'未知' }}</template>
           </el-table-column>
           <el-table-column prop="endTime" label="到期时间" :formatter="dateFormat" />
           <el-table-column prop="payStatus" label="状态">
-            <template slot-scope="scope">
-              {{ +scope.row.payStatus===0?'未支付':+scope.row.payStatus===1?'已支付':+scope.row.payStatus===2&&+scope.row.payType===2?'待收款':+scope.row.payStatus===3?'试用':'未知' }}
-            </template>
+            <template
+              slot-scope="scope"
+            >{{ +scope.row.payStatus===0?'未支付':+scope.row.payStatus===1?'已支付':+scope.row.payStatus===2&&+scope.row.payType===2?'待收款':+scope.row.payStatus===3?'试用':'未知' }}</template>
           </el-table-column>
-          <el-table-column
-            label="编辑"
-          >
+          <el-table-column label="编辑">
             <template slot-scope="scope">
-              <span v-if="+scope.row.payStatus===2&&+scope.row.payType===2" style="color:red;cursor: pointer;" @click="goDetail(scope.row.id)">去收款</span>
+              <span
+                v-if="+scope.row.payStatus===2&&+scope.row.payType===2"
+                style="color:red;cursor: pointer;"
+                @click="goDetail(scope.row.id)"
+              >去收款</span>
               <span v-else style="color:#00c48f;cursor: pointer;" @click="goDetail(scope.row.id)">查看</span>
             </template>
           </el-table-column>
@@ -123,23 +124,39 @@
         <p class="Ptitle">审核意见</p>
       </div>
       <div>
-        <textarea v-model="reason" rows="10" cols="180" style="padding:6px 8px" placeholder="请输入审核意见" />
+        <textarea
+          v-model="reason"
+          rows="10"
+          cols="180"
+          style="padding:6px 8px"
+          placeholder="请输入审核意见"
+        />
       </div>
     </div>
 
-    <div v-if="+companySgin===1" slot="footer" class="dialog-footer" style="margin-left:45%;margin-top:40px">
+    <div
+      v-if="+companySgin===1"
+      slot="footer"
+      class="dialog-footer"
+      style="margin-left:45%;margin-top:40px"
+    >
       <el-button size="medium" type="danger" @click="checkAuth(3)">未通过</el-button>
       <el-button size="medium" type="primary" @click="checkAuth(2)">通 过</el-button>
     </div>
-
+    <el-dialog title :visible.sync="ImgdialogVisible" width="500px" top="260px">
+      <div class="imgShow">
+        <img :src="companyAuth.customer.companyImg" alt srcset />
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import { getCompanyByCustomerId, updateCompanyStatus } from '@/api/chengxu'
 export default {
-  data() {
+  data () {
     return {
+      ImgdialogVisible: false,
       reason: null,
       companyAuth: null,
       companySgin: null,
@@ -156,15 +173,20 @@ export default {
       loading: false // loading加载
     }
   },
-  mounted() {
+  mounted () {
     this.companySgin = this.$route.query.companyStatus
     this.getlist()
   },
   methods: {
-    goDetail(e) {
-      this.$router.push({ path: '/detailOrder', query: { orderId: e }})
+
+    showImg () {
+      this.ImgdialogVisible = true
+
     },
-    async checkAuth(e) {
+    goDetail (e) {
+      this.$router.push({ path: '/detailOrder', query: { orderId: e } })
+    },
+    async checkAuth (e) {
       await updateCompanyStatus({
         param: {
           id: this.companyAuth.user.id,
@@ -183,7 +205,7 @@ export default {
         }
       })
     },
-    getlist() {
+    getlist () {
       const _this = this
       _this.loading = true
       var data = {
@@ -202,12 +224,12 @@ export default {
       })
     },
     // 搜索
-    sousuo() {
+    sousuo () {
       this.Current = 1
       this.getlist()
     },
     // 时间戳转换
-    formatDate(value) {
+    formatDate (value) {
       const date = new Date(value)
       const y = date.getFullYear()
       let MM = date.getMonth() + 1
@@ -222,16 +244,16 @@ export default {
       s = s < 10 ? ('0' + s) : s
       return y + '-' + MM + '-' + d + ' ' + h + ':' + m + ':' + s
     },
-    toNum(value) {
+    toNum (value) {
       if (!value) return 0
       return value.toFixed(2)
     },
     // 分页
-    handleSizeChange(val) {
+    handleSizeChange (val) {
       this.total = val
       this.getlist()
     },
-    handleCurrentChange(val) {
+    handleCurrentChange (val) {
       this.Current = val
       this.getlist()
     }
@@ -240,49 +262,58 @@ export default {
 </script>
 
 <style scoped>
-.el-input>>>.el-input__inner {
-    border: 0 !important;
+.el-input >>> .el-input__inner {
+  border: 0 !important;
 }
-.toolS{
+.imgShow {
+  width: 400px;
+  height: 300px;
+  overflow: hidden;
+  margin: 0 auto;
+}
+.imgShow img {
+  width: 100%;
+  height: 100%;
+}
+.toolS {
   display: flex;
   justify-content: space-between;
-   padding-bottom: 10px;
-    align-items:center;
+  padding-bottom: 10px;
+  align-items: center;
 }
-.shaowAll{
+
+.shaowAll {
   /* box-shadow: 2px 4px 8px 8px rgba(0, 0, 0, 0.05); */
-  box-shadow: 0 2px 12px 0 rgba(0,0,0,.1);
+  box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
   padding: 20px;
-
 }
-.Ptitle{
-      font-size: 18px;
-    line-height: 18px;
-    color: #222;
-    font-weight: 700;
-
-}
-.xfjl_box{
-  margin:20px;
-}
-.el-button{
-    padding: 8px 12px !important;
-}
-.fenye{
-    display: block;
-    text-align: right;
-    margin-top:20px;
-}
-.yue{
-  width:100%;
-  height:50px;
+.Ptitle {
   font-size: 18px;
-    color: #606266;
-    line-height: 50px;
-    padding-left: 10px;
-    font-weight: 600;
+  line-height: 18px;
+  color: #222;
+  font-weight: 700;
+}
+.xfjl_box {
+  margin: 20px;
+}
+.el-button {
+  padding: 8px 12px !important;
+}
+.fenye {
+  display: block;
+  text-align: right;
+  margin-top: 20px;
+}
+.yue {
+  width: 100%;
+  height: 50px;
+  font-size: 18px;
+  color: #606266;
+  line-height: 50px;
+  padding-left: 10px;
+  font-weight: 600;
   background: #fff;
-  float:left;
+  float: left;
   margin-bottom: 20px;
   /* margin-left:122px; */
   box-shadow: 0px 0px 5px #d2d2d2;
