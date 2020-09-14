@@ -8,6 +8,31 @@ export function getSysMenus(data) {
     data
   })
 }
+// 网站table统计
+export function getTable(data) {
+  return request({
+    url: '/th-manager-biz/auth-login/getTable',
+    method: 'post',
+    data
+  })
+}
+// 当日真实IP统计
+export function getRealIP(data) {
+  return request({
+    url: '/th-manager-biz/auth-login/getRealIP',
+    method: 'post',
+    data
+  })
+}
+
+// 当日真实IP分页
+export function getRealIpPage(data) {
+  return request({
+    url: '/th-manager-biz/auth-login/getRealIpPage',
+    method: 'post',
+    data
+  })
+}
 // 私有化信息分页
 export function selectCustomerPage(data) {
   return request({

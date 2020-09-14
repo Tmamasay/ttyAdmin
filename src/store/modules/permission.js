@@ -43,7 +43,8 @@ export const componentsMap = {
   newManager: () => import('@/views/Notice/index'), // 资讯
   adminManager: () => import('@/views/userManager/manager'), // 角色管理
   private: () => import('@/views/userManager/deployment'), // 私有化部署
-  orderManager: () => import('@/views/userManager/order') // 订单列表
+  orderManager: () => import('@/views/userManager/order'), // 订单列表
+  webStatistics: () => import('@/views/dashboard/busIndex') // 首页
 
   // homePage: () => import('@/views/dashboard/busIndex'), // 控制台-首页
   // managerHomePage: () => import('@/views/dashboard/index'), // 控制台-首页

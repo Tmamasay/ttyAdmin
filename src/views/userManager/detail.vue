@@ -4,7 +4,7 @@
       <div class="toolS">
         <p class="Ptitle">基本信息</p>
       </div>
-      <div class="isTrue">
+      <div v-if="companyAuth&&companyAuth.user" class="isTrue">
         <el-form :inline="true" class="demo-form-inline">
           <el-form-item label="用户名：" style="width:350px">
             <el-input v-model="companyAuth.user.name" :readonly="true" />
@@ -41,7 +41,7 @@
       <div class="toolS">
         <p class="Ptitle">实名认证信息</p>
       </div>
-      <div v-if="companyAuth" class="isTrue">
+      <div v-if="companyAuth&&companyAuth.customer" class="isTrue">
         <el-form :inline="true" class="demo-form-inline">
           <el-form-item label="公司名称：" style="width:500px">
             <el-input v-model="companyAuth.customer.companyName" :readonly="true" />
@@ -144,7 +144,7 @@
       <el-button size="medium" type="primary" @click="checkAuth(2)">通 过</el-button>
     </div>
     <el-dialog title :visible.sync="ImgdialogVisible" width="500px" top="260px">
-      <div class="imgShow">
+      <div v-if="companyAuth&&companyAuth.customer" class="imgShow">
         <img :src="companyAuth.customer.companyImg" alt srcset>
       </div>
     </el-dialog>
@@ -218,7 +218,10 @@ export default {
           setTimeout(res => {
             _this.loading = false
           }, 300)
+
           _this.companyAuth = res.data
+          _this.companyAuth.user.createTime = _this.formatDate(_this.companyAuth.user.createTime)
+          _this.companyAuth.customer.companyTime = _this.formatDate(_this.companyAuth.customer.companyTime)
         }
       })
     },
@@ -229,6 +232,7 @@ export default {
     },
     // 时间戳转换
     formatDate(value) {
+      if (!value) return 0
       const date = new Date(value)
       const y = date.getFullYear()
       let MM = date.getMonth() + 1
