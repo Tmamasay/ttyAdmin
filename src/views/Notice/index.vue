@@ -30,12 +30,12 @@
       <el-table-column prop="source" label="来源" />
       <el-table-column prop="remark" label="摘要" />
       <el-table-column prop="title" label="标题" />
-      <el-table-column prop="textBody" label="正文">
+      <!-- <el-table-column prop="textBody" label="正文">
         <template slot-scope="scope">
           <p v-html="scope.row.textBody" />
         </template>
-      </el-table-column>
-      <el-table-column prop="releaseTime" label="发布时间" />
+      </el-table-column> -->
+      <el-table-column prop="releaseTime" label="发布时间" :formatter="formatDate" />
       <el-table-column
         label="编辑"
       >
@@ -187,8 +187,8 @@ export default {
       })
     },
     // 时间戳转换
-    formatDate(value) {
-      const date = new Date(value)
+    formatDate(row) {
+      const date = new Date(row.releaseTime)
       const y = date.getFullYear()
       let MM = date.getMonth() + 1
       MM = MM < 10 ? ('0' + MM) : MM

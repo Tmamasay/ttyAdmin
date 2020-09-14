@@ -61,8 +61,8 @@
           <el-form-item label="营业执照：" style="width:500px">
             <el-image
               style="width: 100px; height: 100px"
-              @click="showImg"
               :src="companyAuth.customer.companyImg"
+              @click="showImg"
             />
             <!-- <img :src="companyAuth.customer.companyImg" alt="" srcset="" width="100" height="100"> -->
             <!-- <el-input v-model="companyAuth.customer.companyImg" :readonly="true" /> -->
@@ -145,7 +145,7 @@
     </div>
     <el-dialog title :visible.sync="ImgdialogVisible" width="500px" top="260px">
       <div class="imgShow">
-        <img :src="companyAuth.customer.companyImg" alt srcset />
+        <img :src="companyAuth.customer.companyImg" alt srcset>
       </div>
     </el-dialog>
   </div>
@@ -154,7 +154,7 @@
 <script>
 import { getCompanyByCustomerId, updateCompanyStatus } from '@/api/chengxu'
 export default {
-  data () {
+  data() {
     return {
       ImgdialogVisible: false,
       reason: null,
@@ -173,20 +173,19 @@ export default {
       loading: false // loading加载
     }
   },
-  mounted () {
+  mounted() {
     this.companySgin = this.$route.query.companyStatus
     this.getlist()
   },
   methods: {
 
-    showImg () {
+    showImg() {
       this.ImgdialogVisible = true
-
     },
-    goDetail (e) {
-      this.$router.push({ path: '/detailOrder', query: { orderId: e } })
+    goDetail(e) {
+      this.$router.push({ path: '/detailOrder', query: { orderId: e }})
     },
-    async checkAuth (e) {
+    async checkAuth(e) {
       await updateCompanyStatus({
         param: {
           id: this.companyAuth.user.id,
@@ -205,7 +204,7 @@ export default {
         }
       })
     },
-    getlist () {
+    getlist() {
       const _this = this
       _this.loading = true
       var data = {
@@ -224,12 +223,12 @@ export default {
       })
     },
     // 搜索
-    sousuo () {
+    sousuo() {
       this.Current = 1
       this.getlist()
     },
     // 时间戳转换
-    formatDate (value) {
+    formatDate(value) {
       const date = new Date(value)
       const y = date.getFullYear()
       let MM = date.getMonth() + 1
@@ -244,16 +243,16 @@ export default {
       s = s < 10 ? ('0' + s) : s
       return y + '-' + MM + '-' + d + ' ' + h + ':' + m + ':' + s
     },
-    toNum (value) {
+    toNum(value) {
       if (!value) return 0
       return value.toFixed(2)
     },
     // 分页
-    handleSizeChange (val) {
+    handleSizeChange(val) {
       this.total = val
       this.getlist()
     },
-    handleCurrentChange (val) {
+    handleCurrentChange(val) {
       this.Current = val
       this.getlist()
     }

@@ -31,7 +31,7 @@
             <el-input v-model="companyAuth.order.endTime" :readonly="true" />
           </el-form-item>
           <el-form-item label="支付时间：" style="width:350px">
-            <el-input v-model="companyAuth.order.payTime" :readonly="true"  />
+            <el-input v-model="companyAuth.order.payTime" :readonly="true" />
           </el-form-item>
           <el-form-item label="支付金额：" style="width:350px">
             <el-input v-model="companyAuth.order.price" :readonly="true" />
