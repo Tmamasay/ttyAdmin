@@ -10,6 +10,13 @@
           <el-input v-model="phone" placeholder="请输入手机号" />
         </el-form-item>
         <el-form-item label="">
+          <el-select v-model="companyStatus" placeholder="请选择支付状态">
+            <el-option label="未认证" value="0" />
+            <el-option label="待审核" value="1" />
+            <el-option label="已认证" value="2" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="">
           <el-date-picker
             v-model="time"
             type="daterange"
@@ -21,6 +28,7 @@
 
         <el-form-item>
           <el-button type="primary" @click="sousuo">搜索</el-button>
+          <el-button type="danger" @click="clearsousuo">删除</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -34,10 +42,18 @@
       <el-table-column prop="name" label="姓名" />
       <el-table-column prop="customerName" label="公司名称" />
       <el-table-column prop="position" label="职位" />
-      <el-table-column prop="gid" label="会员注册日期" />
+      <el-table-column prop="createTime" label="会员注册日期" :formatter="formatDate" />
       <el-table-column prop="username" label="手机号" />
       <el-table-column prop="capacity" label="服务器预计容量" />
-      <el-table-column prop="gid" label="已使用容量" />
+      <el-table-column prop="realCapacity" label="已使用容量" />
+      <el-table-column prop="percentage" label="已使用容量">
+        <template slot-scope="scope">
+          <el-progress v-if="scope.row.percentage*100<80" :text-inside="true" color="#00c48f" :stroke-width="20" :percentage="scope.row.percentage*100" status="success" />
+          <el-progress v-else :text-inside="true" :stroke-width="20" color="#e20d06" :percentage="scope.row.percentage*100" status="success" />
+          <!-- <el-progress :text-inside="true" :stroke-width="24" :percentage="100" status="success" /> -->
+          <!-- {{ scope.row.percentage }} -->
+        </template>
+      </el-table-column>
       <el-table-column prop="companyStatus" label="状态">
         <template slot-scope="scope">
           {{ +scope.row.companyStatus===0?'未认证':+scope.row.companyStatus===1?'待审核':+scope.row.companyStatus===2?'已认证':'已驳回' }}
@@ -72,6 +88,7 @@ export default {
   data() {
     return {
       companyName: '',
+      companyStatus: '',
       phone: '',
       datalist: [],
       yueNum: 0,
@@ -87,6 +104,12 @@ export default {
     this.getlist()
   },
   methods: {
+    clearsousuo() {
+      this.companyName = ''
+      this.companyStatus = ''
+      this.phone = ''
+      this.time = null
+    },
     goDetail(e, v) {
       this.$router.push({ path: '/detial', query: { companyStatus: e, customerId: v }})
     },
@@ -96,6 +119,7 @@ export default {
       var data = {
         param: {
           companyName: this.companyName,
+          companyStatus: this.companyStatus ? +this.companyStatus : '',
           phone: this.phone,
           pageNum: _this.Current,
           pageSize: _this.Size,
@@ -120,8 +144,9 @@ export default {
       this.getlist()
     },
     // 时间戳转换
-    formatDate(value) {
-      const date = new Date(value)
+    formatDate(row) {
+      if (!row.createTime) return ''
+      const date = new Date(row.createTime)
       const y = date.getFullYear()
       let MM = date.getMonth() + 1
       MM = MM < 10 ? ('0' + MM) : MM

@@ -103,12 +103,16 @@
       <el-button size="medium" type="danger" @click="checkAuth(0)">未到账</el-button>
       <el-button size="medium" type="primary" @click="checkAuth(1)">已到账</el-button>
     </div>
+    <div v-if="companyAuth&&companyAuth.order&&companyAuth.order.billStatus===2" slot="footer" class="dialog-footer" style="margin-left:45%;margin-top:40px">
+      <el-button size="medium" type="danger" @click="checkBack">返回</el-button>
+      <el-button size="medium" type="primary" @click="checkFP(companyAuth.order.id)">已开票</el-button>
+    </div>
 
   </div>
 </template>
 
 <script>
-import { getOrderOne, orderCollection } from '@/api/chengxu'
+import { getOrderOne, orderCollection, changeBillStatus } from '@/api/chengxu'
 export default {
   data() {
     return {
@@ -133,6 +137,26 @@ export default {
     this.getlist()
   },
   methods: {
+    checkBack() {
+      this.$router.go(-1)// 返回上一层
+    },
+    async checkFP(id) {
+      await changeBillStatus({
+        param: {
+          orderId: id
+        }
+      }).then(res => {
+        console.log(res)
+        if (res.statusCode === '00000') {
+          this.$message({
+            message: '操作成功',
+            type: 'success',
+            duration: 3 * 1000
+          })
+          this.getlist()
+        }
+      })
+    },
     payTypeFor(payType) {
       return payType === 0 ? '支付宝' : payType === 1 ? '微信' : payType === 2 ? '银行卡' : payType === 3 ? '试用' : '未知'
     },

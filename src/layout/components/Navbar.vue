@@ -7,8 +7,9 @@
     <div class="right-menu">
       <!-- <el-button class="waihu" type="primary" @click="boda_pop"> <svg-icon style="" icon-class="waihu" />&nbsp;呼叫</el-button> -->
       <!-- <el-button class="waihu" type="primary"> <svg-icon style="" icon-class="waihu" />&nbsp;呼叫</el-button> -->
-
+      <p class="waihu">{{ name }}</p>
       <el-dropdown class="avatar-container" trigger="click">
+        <!-- <p>{{ name }}</p> -->
         <div class="avatar-wrapper">
           <!-- <img :src="'@/assets/avatar/PITAO-'+Math.floor(Math.random()*15+1)+'.png'" class="user-avatar"> -->
           <img :src="getImgUrl()" class="user-avatar" style="margin-top:6px">
@@ -29,28 +30,6 @@
         </el-dropdown-menu>
       </el-dropdown>
     </div>
-    <!-- 外呼 -->
-    <el-dialog
-      title="拨打的电话号码"
-      :visible.sync="dialogVisible_wh"
-      :close-on-click-modal="false"
-      width="30%"
-      @closed="handleClose_wh"
-    >
-      <el-form ref="whData" :label-position="labelPosition" label-width="140px" :model="whData" :rules="ruleswh" @submit.native.prevent>
-        <!-- <el-form-item label="企业微信绑定电话" prop="qyTell">
-          <el-input v-model.number="whData.qyTell" placeholder="请输入企业微信绑定电话" />
-        </el-form-item> -->
-        <el-form-item label="拨打的电话号码" prop="tell">
-          <el-input v-model="whData.tell" placeholder="拨打的电话号码" @keyup.enter.native="boda('whData')" />
-        </el-form-item>
-      </el-form>
-      <div slot="footer" class="dialog-footer">
-        <el-button @click="quxiao_wh('whData')">取 消</el-button>
-        <el-button type="primary" @click="boda('whData')">确 定</el-button>
-        <!-- <el-button type="primary">确 定</el-button> -->
-      </div>
-    </el-dialog>
     <!-- 修改密码 -->
     <el-dialog
       title="修改密码"
@@ -86,7 +65,7 @@ import { mapGetters } from 'vuex'
 import Breadcrumb from '@/components/Breadcrumb'
 import Hamburger from '@/components/Hamburger'
 import { ttyMD5 } from '@/utils'
-import { removeToken, removeRefreshToken, getisOpen, setisOpen, removeInfo, removecustomerId } from '@/utils/auth'
+import { removeToken, getUserName, removeRefreshToken, getisOpen, setisOpen, removeInfo, removecustomerId } from '@/utils/auth'
 import { callInside, updatePassword } from '@/api/framework'
 export default {
   components: {
@@ -95,6 +74,7 @@ export default {
   },
   data() {
     return {
+      name: getUserName(),
       dialogVisible_wh: false,
       dialogVisible_xgmm: false,
       /* 外呼*/
@@ -262,27 +242,21 @@ export default {
     },
     // 关闭弹窗清楚验证-外呼
     handleClose_wh() {
-      this.$refs.whData.resetFields()
-    },
-    // 清除表单验证-外呼
-    quxiao_wh(formName) {
-      this.dialogVisible_wh = false
-      this.$refs[formName].clearValidate()
-    },
-    quxiao_mm(formName) {
-      this.dialogVisible_xgmm = false
-      this.$refs[formName].clearValidate()
+      // this.$refs.whData.resetFields()
     }
+
   }
 }
 </script>
 
 <style lang="scss" scoped>
 .waihu{
-  padding: 8px 12px !important;
-  position: relative;
+  padding: 4px 12px !important;
+  position: absolute;
   top:-15px;
-  margin-right:50px;
+  right:80px;
+  font-size: 18px;
+  font-weight: 600;
 }
 .navbar {
   height: 50px;
@@ -337,6 +311,7 @@ export default {
 
     .avatar-container {
       margin-right: 30px;
+      // margin-top: 2px;
 
       .avatar-wrapper {
         margin-top: 2px;

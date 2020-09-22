@@ -28,7 +28,7 @@
           {{ formatDate(scope.row.createTime) }}
         </template>
       </el-table-column>
-      <el-table-column prop="userName" label="用户名" />
+      <el-table-column prop="username" label="用户名" />
       <el-table-column prop="roleName" label="角色" />
       <el-table-column
         label="编辑"
@@ -85,7 +85,7 @@
 
 <script>
 import { selectUserManagerList, updateUserManager, deleteUserManager, selectRoleList, addUserManager } from '@/api/chengxu'
-// import { ttyMD5 } from '@/utils'
+import { ttyMD5 } from '@/utils'
 export default {
   data() {
     return {
@@ -141,7 +141,7 @@ export default {
       await _this.$refs[formName].validate((valid) => {
         if (valid) {
           if (!this.yhData.id) {
-            // this.yhData.password = ttyMD5(this.yhData.password)
+            this.yhData.password = ttyMD5(this.yhData.password)
             addUserManager({
               param: this.yhData
             }).then(res => {

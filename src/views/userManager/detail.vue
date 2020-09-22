@@ -60,9 +60,10 @@
           </el-form-item>
           <el-form-item label="营业执照：" style="width:500px">
             <el-image
+              v-if="srcList.length"
               style="width: 100px; height: 100px"
               :src="companyAuth.customer.companyImg"
-              @click="showImg"
+              :preview-src-list="srcList"
             />
             <!-- <img :src="companyAuth.customer.companyImg" alt="" srcset="" width="100" height="100"> -->
             <!-- <el-input v-model="companyAuth.customer.companyImg" :readonly="true" /> -->
@@ -91,7 +92,7 @@
             <template slot-scope="scope">{{ scope.row.minNum }}-{{ scope.row.maxNum }}人</template>
           </el-table-column>
 
-          <el-table-column prop="payTime" label="支付时间" :formatter="dateFormat" />
+          <el-table-column prop="payTime" label="支付时间" />
           <el-table-column prop="price" label="支付金额" />
 
           <el-table-column prop="payType" label="支付方式">
@@ -99,7 +100,7 @@
               slot-scope="scope"
             >{{ +scope.row.payType===0?'支付宝':+scope.row.payType===1?'微信':+scope.row.payType===2?'银行卡':+scope.row.payType===3?'试用':'未知' }}</template>
           </el-table-column>
-          <el-table-column prop="endTime" label="到期时间" :formatter="dateFormat" />
+          <el-table-column prop="endTime" label="到期时间" />
           <el-table-column prop="payStatus" label="状态">
             <template
               slot-scope="scope"
@@ -116,6 +117,7 @@
             </template>
           </el-table-column>
         </el-table>
+        <div class="Ptitle" style="margin-left:50px">金额共计：{{ companyAuth.tolPrice? (companyAuth.tolPrice/100).toFixed(2):0 }}元</div>
       </div>
     </div>
 
@@ -156,6 +158,7 @@ import { getCompanyByCustomerId, updateCompanyStatus } from '@/api/chengxu'
 export default {
   data() {
     return {
+      srcList: [],
       ImgdialogVisible: false,
       reason: null,
       companyAuth: null,
@@ -220,6 +223,7 @@ export default {
           }, 300)
 
           _this.companyAuth = res.data
+          _this.srcList.push(_this.companyAuth.customer.companyImg)
           _this.companyAuth.user.createTime = _this.formatDate(_this.companyAuth.user.createTime)
           _this.companyAuth.customer.companyTime = _this.formatDate(_this.companyAuth.customer.companyTime)
         }

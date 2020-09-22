@@ -40,6 +40,7 @@
         label="编辑"
       >
         <template slot-scope="scope">
+          <span style="color:#00c48f;cursor: pointer;" @click="goPre(scope.row)">预览</span>
           <span style="color:#00c48f;cursor: pointer;" @click="goEdit(scope.row)">编辑</span>
           <span style="color:red;cursor: pointer;padding-left:10px" @click="removeZX(scope.row)">删除</span>
         </template>
@@ -171,6 +172,9 @@ export default {
     this.getlist()
   },
   methods: {
+    goPre(row) {
+      this.$router.push({ path: '/preDetaill', query: { newsId: row.id }})
+    },
     goEdit(row) {
       this.dialogVisible = true
       this.addZxData = {
@@ -189,6 +193,22 @@ export default {
     // 时间戳转换
     formatDate(row) {
       const date = new Date(row.releaseTime)
+      const y = date.getFullYear()
+      let MM = date.getMonth() + 1
+      MM = MM < 10 ? ('0' + MM) : MM
+      let d = date.getDate()
+      d = d < 10 ? ('0' + d) : d
+      let h = date.getHours()
+      h = h < 10 ? ('0' + h) : h
+      let m = date.getMinutes()
+      m = m < 10 ? ('0' + m) : m
+      let s = date.getSeconds()
+      s = s < 10 ? ('0' + s) : s
+      return y + '-' + MM + '-' + d + ' ' + h + ':' + m + ':' + s
+    },
+    // 时间戳转换
+    formatDate2(value) {
+      const date = new Date(value)
       const y = date.getFullYear()
       let MM = date.getMonth() + 1
       MM = MM < 10 ? ('0' + MM) : MM
@@ -271,7 +291,7 @@ export default {
       const _this = this
       await _this.$refs[formName].validate((valid) => {
         if (valid) {
-          this.addZxData.releaseTime = this.formatDate(new Date(this.addZxData.releaseTime).getTime())
+          this.addZxData.releaseTime = this.formatDate2(new Date(this.addZxData.releaseTime).getTime())
           const data = {
             param: this.addZxData
           }

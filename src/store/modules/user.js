@@ -1,6 +1,6 @@
 // import { logout } from '@/api/user'
 import { userLogin, getMyMenus, loginOut } from '@/api/framework'
-import { removeToken, removeisOpen, removeRefreshToken, removeInfo, removecustomerId, getToken, setToken, setRefreshToken, getInfoo, setcustomerId } from '@/utils/auth'
+import { removeToken, removeisOpen, setUserName, removeRefreshToken, removeInfo, removecustomerId, getToken, setToken, setRefreshToken, getInfoo, setcustomerId } from '@/utils/auth'
 import { resetRouter, constantRoutes } from '@/router'
 import { ttyMD5 } from '@/utils'
 import Layout from '@/layout'
@@ -62,6 +62,7 @@ const actions = {
           setRefreshToken(response.data.refresh_token)
           console.log(response.data.access_token)
           setcustomerId(response.data.customerId)
+          setUserName(response.data.userName)
         }
         resolve(response)
       }).catch(error => {

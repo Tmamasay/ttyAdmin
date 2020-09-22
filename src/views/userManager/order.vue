@@ -1,13 +1,28 @@
 <template>
   <div class="xfjl_box shaowAll">
     <div class="toolS">
-      <p class="Ptitle">会员列表</p>
+      <p class="Ptitle">订单列表</p>
       <el-form :inline="true" class="demo-form-inline">
         <el-form-item label="">
           <el-input v-model="orderId" placeholder="请输入订单id" />
         </el-form-item>
         <el-form-item label="">
           <el-input v-model="companyName" placeholder="请输入公司名称" />
+        </el-form-item>
+        <el-form-item label="">
+          <el-select v-model="billStatus" placeholder="请选择开票状态">
+            <el-option label="未开" value="0" />
+            <el-option label="已提交" value="2" />
+            <el-option label="已开" value="1" />
+          </el-select>
+        </el-form-item>
+        <el-form-item label="">
+          <el-select v-model="payStatus" placeholder="请选择支付状态">
+            <el-option label="未支付" value="0" />
+            <el-option label="已支付" value="1" />
+            <el-option label="待收款" value="2" />
+            <el-option label="试用" value="3" />
+          </el-select>
         </el-form-item>
         <el-form-item label="">
           <el-date-picker
@@ -21,6 +36,7 @@
 
         <el-form-item>
           <el-button type="primary" @click="sousuo">搜索</el-button>
+          <el-button type="danger" @click="clearsousuo">清除</el-button>
         </el-form-item>
       </el-form>
     </div>
@@ -50,9 +66,22 @@
         </template>
       </el-table-column>
       <el-table-column prop="endTime" label="到期时间" :formatter="dateFormat" />
-      <el-table-column prop="payStatus" label="状态">
+      <el-table-column prop="payStatus" label="支付状态">
         <template slot-scope="scope">
           {{ +scope.row.payStatus===0?'未支付':+scope.row.payStatus===1?'已支付':+scope.row.payStatus===2&&+scope.row.payType===2?'待收款':+scope.row.payStatus===3?'试用':'未知' }}
+        </template>
+      </el-table-column>
+      <el-table-column prop="billStatus" label="开票状态">
+        <template slot-scope="scope">
+          <span v-if="+scope.row.payStatus===1&&+scope.row.billStatus===0">
+            <span class="qxOr">未申请</span>
+          </span>
+          <span v-if="+scope.row.payStatus===1&&+scope.row.billStatus===2">
+            <span class="qxOrOver">待开票</span>
+          </span>
+          <span v-if="+scope.row.payStatus===1&&+scope.row.billStatus===1">
+            <span class="qxOrOver">已开票</span>
+          </span>
         </template>
       </el-table-column>
       <el-table-column
@@ -64,10 +93,11 @@
         </template>
       </el-table-column>
     </el-table>
+    <div class="Ptitle" style="margin-left:50px">金额共计：{{ (totalPrice/100).toFixed(2) }}元</div>
     <div class="block fenye">
       <el-pagination
         :current-page="Current"
-        :page-sizes="[10, 20, 30, 50]"
+        :page-sizes="[10, 20, 30, 50,100]"
         :page-size="Size"
         layout="total, sizes, prev, pager, next, jumper"
         :total="total"
@@ -75,6 +105,7 @@
         @current-change="handleCurrentChange"
       />
     </div>
+
   </div>
 </template>
 
@@ -84,6 +115,8 @@ import moment from 'moment'
 export default {
   data() {
     return {
+      payStatus: '',
+      billStatus: '',
       companyName: '',
       orderId: '',
       datalist: [],
@@ -93,13 +126,21 @@ export default {
       total: 0, // 总数
       time: null,
       type: null,
-      loading: false // loading加载
+      loading: false, // loading加载
+      totalPrice: ''
     }
   },
   mounted() {
     this.getlist()
   },
   methods: {
+    clearsousuo() {
+      this.payStatus = ''
+      this.billStatus = ''
+      this.companyName = ''
+      this.orderId = ''
+      this.time = null
+    },
     goDetail(e) {
       this.$router.push({ path: '/detailOrder', query: { orderId: e }})
     },
@@ -110,6 +151,8 @@ export default {
         param: {
           companyName: this.companyName,
           orderId: this.orderId,
+          payStatus: this.payStatus ? +this.payStatus : '',
+          billStatus: this.billStatus ? +this.billStatus : '',
           pageNum: _this.Current,
           pageSize: _this.Size,
           startTime: _this.time ? new Date(_this.time[0]).getTime() : '',
@@ -122,8 +165,9 @@ export default {
           setTimeout(res => {
             _this.loading = false
           }, 300)
-          _this.datalist = res.data.records
-          _this.total = res.data.total
+          _this.datalist = res.data.orders.records
+          _this.total = res.data.orders.total
+          _this.totalPrice = res.data.tolPrice
         }
       })
     },

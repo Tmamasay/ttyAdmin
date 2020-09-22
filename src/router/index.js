@@ -52,6 +52,10 @@ export const constantRoutes = [
       {
         path: 'detailOrder',
         component: () => import('@/views/userManager/detailOrder')
+      },
+      {
+        path: 'preDetaill',
+        component: () => import('@/views/Notice/preDetaill')
       }
     ]
   },

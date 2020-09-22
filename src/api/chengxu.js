@@ -25,6 +25,23 @@ export function getRealIP(data) {
   })
 }
 
+// 确认寄出发票
+export function changeBillStatus(data) {
+  return request({
+    url: '/th-manager-biz/bill-manager/changeBillStatus',
+    method: 'post',
+    data
+  })
+}
+// 咨询详情
+export function getNoticeOne(data) {
+  return request({
+    url: '/th-manager-biz/private-product/getNoticeOne',
+    method: 'post',
+    data
+  })
+}
+
 // 当日真实IP分页
 export function getRealIpPage(data) {
   return request({

@@ -2,6 +2,7 @@ import Cookies from 'js-cookie'
 
 const TokenKey = 'vue_admin_template_token'
 const InfoKey = 'info'
+const userName = 'userName'
 const refreshToken = 'refresh_token'
 
 export function getToken() {
@@ -39,6 +40,15 @@ export function setInfo(token) {
 
 export function removeInfo() {
   return Cookies.remove(InfoKey)
+}
+
+// 用户名
+export function getUserName() {
+  return Cookies.get(userName)
+}
+
+export function setUserName(name) {
+  return Cookies.set(userName, name)
 }
 
 // 获取权限按钮
