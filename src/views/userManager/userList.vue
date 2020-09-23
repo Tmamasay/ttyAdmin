@@ -28,7 +28,7 @@
 
         <el-form-item>
           <el-button type="primary" @click="sousuo">搜索</el-button>
-          <el-button type="danger" @click="clearsousuo">删除</el-button>
+          <el-button type="danger" @click="clearsousuo">清除</el-button>
         </el-form-item>
       </el-form>
     </div>

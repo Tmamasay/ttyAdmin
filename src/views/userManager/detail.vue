@@ -22,16 +22,18 @@
             <el-input v-model="companyAuth.user.username" :readonly="true" />
           </el-form-item>
           <el-form-item label="服务器预计容量：" style="width:350px">
-            <el-input v-model="companyAuth.user.name" :readonly="true" />
+            <el-input v-model="companyAuth.myOrder.capacity" :readonly="true" />
           </el-form-item>
           <el-form-item label="已使用容量：" style="width:350px">
-            <el-input v-model="companyAuth.user.name" :readonly="true" />
+            <el-input v-model="companyAuth.filesize" :readonly="true" />
           </el-form-item>
           <el-form-item label="使用容量百分比：" style="width:350px">
-            <el-input v-model="companyAuth.user.name" :readonly="true" />
+            <span>{{ bfBVa(companyAuth.myOrder.capacity,companyAuth.filesize) }}%</span>
+            <!-- <el-input v-model="companyAuth.user.name" :readonly="true" /> -->
           </el-form-item>
           <el-form-item label="状态：" style="width:350px">
-            <el-input v-model="companyAuth.user.status" :readonly="true" />
+            <span>{{ companyAuth.customer.action?'use':'false' }}</span>
+            <!-- <el-input v-model="companyAuth.user.status" :readonly="true" /> -->
           </el-form-item>
         </el-form>
       </div>
@@ -44,19 +46,22 @@
       <div v-if="companyAuth&&companyAuth.customer" class="isTrue">
         <el-form :inline="true" class="demo-form-inline">
           <el-form-item label="公司名称：" style="width:500px">
-            <el-input v-model="companyAuth.customer.companyName" :readonly="true" />
+            <span style="color:#606266">{{ companyAuth.customer.companyName }}</span>
+            <!-- <el-input v-model="companyAuth.customer.companyName" :readonly="true" /> -->
           </el-form-item>
           <el-form-item label="统一社会信用代码/注册号/组织机构代码：" style="width:500px">
             <el-input v-model="companyAuth.customer.companyCode" :readonly="true" />
           </el-form-item>
           <el-form-item label="公司注册地址：" style="width:500px">
-            <el-input v-model="companyAuth.customer.address" :readonly="true" />
+            <span style="color:#606266">{{ companyAuth.customer.address }}</span>
+            <!-- <el-input v-model="companyAuth.customer.address" :readonly="true" /> -->
           </el-form-item>
           <el-form-item label="注册日期：" style="width:500px">
             <el-input v-model="companyAuth.customer.companyTime" :readonly="true" />
           </el-form-item>
           <el-form-item label="经营期限至：" style="width:500px">
-            <el-input v-model="companyAuth.customer.limitTime" :readonly="true" />
+            <span style="color:#606266">{{ companyAuth.customer.limitTime?companyAuth.customer.limitTime:'长期' }}</span>
+            <!-- <el-input v-model="companyAuth.customer.limitTime" :readonly="true" /> -->
           </el-form-item>
           <el-form-item label="营业执照：" style="width:500px">
             <el-image
@@ -85,22 +90,26 @@
           highlight-current-row
         >
           <el-table-column prop="orderId" label="订单号" />
-          <el-table-column prop="companyName" label="公司名称" />
+          <!-- <el-table-column prop="companyName" label="公司名称" /> -->
           <el-table-column prop="years" label="购买年限" />
           <el-table-column prop="productName" label="订购版本" />
           <el-table-column label="使用人数">
             <template slot-scope="scope">{{ scope.row.minNum }}-{{ scope.row.maxNum }}人</template>
           </el-table-column>
 
-          <el-table-column prop="payTime" label="支付时间" />
-          <el-table-column prop="price" label="支付金额" />
+          <el-table-column prop="payTime" label="支付时间" :formatter="dateFormat" />
+          <el-table-column prop="price" label="支付金额">
+            <template slot-scope="scope">
+              {{ scope.row.price/100 }}</template>
+          </el-table-column>
+          <el-table-column prop="explainRemarks" label="订单备注" />
 
           <el-table-column prop="payType" label="支付方式">
             <template
               slot-scope="scope"
             >{{ +scope.row.payType===0?'支付宝':+scope.row.payType===1?'微信':+scope.row.payType===2?'银行卡':+scope.row.payType===3?'试用':'未知' }}</template>
           </el-table-column>
-          <el-table-column prop="endTime" label="到期时间" />
+          <el-table-column prop="endTime" label="到期时间" :formatter="dateFormat" />
           <el-table-column prop="payStatus" label="状态">
             <template
               slot-scope="scope"
@@ -155,6 +164,7 @@
 
 <script>
 import { getCompanyByCustomerId, updateCompanyStatus } from '@/api/chengxu'
+import moment from 'moment'
 export default {
   data() {
     return {
@@ -181,7 +191,17 @@ export default {
     this.getlist()
   },
   methods: {
-
+    bfBVa(v, k) {
+      const Ve = v.substr(0, v.length - 1)
+      return ((k / (+Ve) * 1099511627776) * 100).toFixed(2)
+    },
+    dateFormat(row, column) {
+      var date = row.payTime
+      if (!date) {
+        return ''
+      }
+      return moment(date).format('YYYY-MM-DD HH:mm:ss')
+    },
     showImg() {
       this.ImgdialogVisible = true
     },

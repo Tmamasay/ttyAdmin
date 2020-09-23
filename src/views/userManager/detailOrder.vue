@@ -9,8 +9,8 @@
           <el-form-item label="订单号：" style="width:350px">
             <el-input v-model="companyAuth.order.orderId" :readonly="true" />
           </el-form-item>
-          <el-form-item label="公司名称：" style="width:350px">
-            <el-input v-model="companyAuth.companyName" :readonly="true" />
+          <el-form-item label="公司名称：" style="width:400px">
+            <el-input v-model="companyAuth.companyName" :readonly="true" style="width:300px" />
           </el-form-item>
           <el-form-item label="用户名：" style="width:350px">
             <el-input v-model="companyAuth.username" :readonly="true" />
@@ -22,7 +22,10 @@
             <el-input v-model="companyAuth.order.productName" :readonly="true" />
           </el-form-item>
           <el-form-item label="使用人数：" style="width:350px">
-            <el-input v-model="companyAuth.order.maxNum" :readonly="true" />
+            <span style="color: #606266;">{{ companyAuth.order.minNum }}-{{ companyAuth.order.maxNum }}</span>
+
+            <!-- <el-input v-model="companyAuth.order.minNum" :readonly="true" />
+            <el-input v-model="companyAuth.order.maxNum" :readonly="true" /> -->
           </el-form-item>
           <el-form-item label="服务器容量：" style="width:350px">
             <el-input v-model="companyAuth.order.capacity" :readonly="true" />
@@ -68,13 +71,14 @@
             <el-input value="普票" :readonly="true" />
           </el-form-item>
           <el-form-item label="发票抬头：" style="width:500px">
-            <el-input v-model="companyAuth.bill.billTitle" :readonly="true" />
+            <el-input v-model="companyAuth.bill.billTitle" :readonly="true" style="width:300px" />
           </el-form-item>
           <el-form-item label="纳税人识别号：" style="width:500px">
             <el-input v-model="companyAuth.bill.billCode" :readonly="true" />
           </el-form-item>
           <el-form-item label="注册地址：" style="width:500px">
-            <el-input v-model="companyAuth.bill.registerAddress" :readonly="true" />
+            <textarea v-model="companyAuth.bill.registerAddress" :readonly="true" cols="50" rows="3" />
+            <!-- <el-input v-model="companyAuth.bill.registerAddress" :readonly="true" style="width:400px" /> -->
           </el-form-item>
           <el-form-item label="注册电话：" style="width:500px">
             <el-input v-model="companyAuth.bill.registerPhone" :readonly="true" />
@@ -83,7 +87,7 @@
             <el-input v-model="companyAuth.bill.bankName" :readonly="true" />
           </el-form-item>
           <el-form-item label="银行账号：" style="width:500px">
-            <el-input v-model="companyAuth.bill.bankCode" :readonly="true" />
+            <el-input v-model="companyAuth.bill.bankCode" :readonly="true" style="width:300px" />
           </el-form-item>
           <el-form-item label="开票金额：" style="width:500px">
             <el-input v-model="companyAuth.order.price" :readonly="true" />
@@ -93,7 +97,8 @@
             <el-input v-model="companyAuth.bill.sendPhone" :readonly="true" />
           </el-form-item>
           <el-form-item label="收货地址：" style="width:500px">
-            <el-input v-model="companyAuth.bill.sendAddress" :readonly="true" />
+            <textarea v-model="companyAuth.bill.sendAddress" :readonly="true" cols="50" rows="3" />
+            <!-- <el-input v-model="companyAuth.bill.sendAddress" :readonly="true" /> -->
           </el-form-item>
         </el-form>
       </div>
@@ -198,6 +203,9 @@ export default {
           console.log(res.data)
           _this.companyAuth = res.data
           console.log(_this.companyAuth)
+          _this.companyAuth.order.endTime = this.formatDate(_this.companyAuth.order.endTime)
+          _this.companyAuth.order.payTime = this.formatDate(_this.companyAuth.order.payTime)
+          _this.companyAuth.order.price = this.toNum(_this.companyAuth.order.price / 100)
           _this.companyAuth.order.payStatus = this.payStatusFor(_this.companyAuth.order.payStatus, _this.companyAuth.order.payType)
           _this.companyAuth.order.payType = this.payTypeFor(_this.companyAuth.order.payType)
         }
@@ -210,6 +218,7 @@ export default {
     },
     // 时间戳转换
     formatDate(value) {
+      if (!value) return ''
       const date = new Date(value)
       const y = date.getFullYear()
       let MM = date.getMonth() + 1
@@ -244,6 +253,16 @@ export default {
 <style scoped>
 .el-input>>>.el-input__inner {
     border: 0 !important;
+}
+textarea{
+              /* width: 100%;
+              height: 100%; */
+              border: none;
+              resize: none;
+              cursor: pointer;
+              padding-top: 10px;
+              line-height: 20px;
+              color: #606266;
 }
 .toolS{
   display: flex;

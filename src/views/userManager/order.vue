@@ -11,9 +11,9 @@
         </el-form-item>
         <el-form-item label="">
           <el-select v-model="billStatus" placeholder="请选择开票状态">
-            <el-option label="未开" value="0" />
-            <el-option label="已提交" value="2" />
-            <el-option label="已开" value="1" />
+            <el-option label="未申请" value="0" />
+            <el-option label="待开票" value="2" />
+            <el-option label="已开票" value="1" />
           </el-select>
         </el-form-item>
         <el-form-item label="">
@@ -21,7 +21,7 @@
             <el-option label="未支付" value="0" />
             <el-option label="已支付" value="1" />
             <el-option label="待收款" value="2" />
-            <el-option label="试用" value="3" />
+            <!-- <el-option label="试用" value="3" /> -->
           </el-select>
         </el-form-item>
         <el-form-item label="">
@@ -58,7 +58,11 @@
       </el-table-column>
 
       <el-table-column prop="payTime" label="支付时间" :formatter="dateFormat" />
-      <el-table-column prop="price" label="支付金额" />
+      <el-table-column prop="price" label="支付金额">
+        <template slot-scope="scope">
+          {{ scope.row.price/100 }}
+        </template>
+      </el-table-column>
 
       <el-table-column prop="payType" label="支付方式">
         <template slot-scope="scope">
@@ -66,6 +70,7 @@
         </template>
       </el-table-column>
       <el-table-column prop="endTime" label="到期时间" :formatter="dateFormat" />
+      <el-table-column prop="explainRemarks" label="订单备注" />
       <el-table-column prop="payStatus" label="支付状态">
         <template slot-scope="scope">
           {{ +scope.row.payStatus===0?'未支付':+scope.row.payStatus===1?'已支付':+scope.row.payStatus===2&&+scope.row.payType===2?'待收款':+scope.row.payStatus===3?'试用':'未知' }}

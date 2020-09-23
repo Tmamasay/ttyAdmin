@@ -140,11 +140,11 @@ export default {
     // 分页
     handleSizeChange(val) {
       this.Size = val
-      this.gethd()
+      this.getRealIpPage()
     },
     handleCurrentChange(val) {
       this.Current = val
-      this.gethd()
+      this.getRealIpPage()
     },
 
     // 时间戳转换
